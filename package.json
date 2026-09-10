@@ -1,14 +1,14 @@
 {
-  "name": "rifa-radicais-kids",
-  "version": "2.0.0",
+  "name": "rifa-encontro-com-deus",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "start": "node server.js"
   },
   "dependencies": {
-    "express": "^5.1.0",
-    "multer": "^2.0.2",
-    "nodemailer": "^7.0.6",
+    "express": "^4.21.2",
+    "multer": "^1.4.5-lts.1",
+    "nodemailer": "^6.10.1",
     "qrcode": "^1.5.4"
   }
 }
