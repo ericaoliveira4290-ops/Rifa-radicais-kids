@@ -1,13 +1,12 @@
 {
   "name": "rifa-radicais-kids",
-  "version": "2.2.0",
+  "version": "3.0.0",
   "private": true,
-  "scripts": {
-    "start": "node server.js"
-  },
+  "scripts": {"start":"node server.js"},
   "dependencies": {
-    "express": "^4.21.2",
-    "nodemailer": "^6.10.1",
-    "qrcode": "^1.5.4"
+    "express":"^4.21.2",
+    "nodemailer":"^6.10.1",
+    "qrcode":"^1.5.4",
+    "@supabase/supabase-js":"^2.57.0"
   }
 }

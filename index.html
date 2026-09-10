@@ -6,13 +6,13 @@
 <meta name="theme-color" content="#7440C7">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <title>Rifa Radicais Kids | Juvenil — Encontro com Deus</title>
 <style>
 :root{--purple:#7440c7;--purple-dark:#4b237f;--lilac:#a86df0;--pink:#ef83ca;--pink-soft:#ffe5f5;--blue:#62d2e8;--blue-soft:#e9fbff;--yellow:#ffd85c;--green:#2bbd9b;--green-soft:#e3f8f1;--ink:#39264f;--muted:#786987;--white:#fff;--gray:#d9d5de}
-*{box-sizing:border-box}
+*{box-sizing:border-box;font-family:"Montserrat",sans-serif!important}
 html{scroll-behavior:smooth}
-body{margin:0;font-family:Montserrat,Arial,sans-serif;color:var(--ink);min-height:100vh;background:linear-gradient(180deg,#dff8ff 0,#f3f0ff 48%,#fff1fa 100%);overflow-x:hidden;position:relative}
+body{margin:0;font-family:"Montserrat",sans-serif;color:var(--ink);min-height:100vh;background:linear-gradient(180deg,#dff8ff 0,#f3f0ff 48%,#fff1fa 100%);overflow-x:hidden;position:relative}
 /* Fundo decorativo inspirado na identidade Radicais Kids, sem usar outra imagem */
 body:before{content:"RADICAIS KIDS   JUVENIL   ENCONTRO COM DEUS   RADICAIS KIDS   JUVENIL   ENCONTRO COM DEUS";position:fixed;inset:-15%;z-index:-2;display:block;font-size:clamp(38px,7vw,90px);font-weight:900;line-height:1.8;letter-spacing:4px;color:rgba(116,64,199,.045);transform:rotate(-12deg);word-spacing:20px}
 body:after{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;background:radial-gradient(circle at 5% 10%,rgba(255,255,255,.95) 0 9px,transparent 10px),radial-gradient(circle at 94% 15%,rgba(239,131,202,.20) 0 22px,transparent 23px),radial-gradient(circle at 12% 72%,rgba(98,210,232,.18) 0 30px,transparent 31px),radial-gradient(circle at 88% 78%,rgba(255,216,92,.18) 0 20px,transparent 21px);background-size:180px 180px,280px 280px,360px 360px,420px 420px}
@@ -45,7 +45,7 @@ h1{margin:16px 0 7px;font-size:clamp(31px,6vw,58px);line-height:1;font-weight:90
 50%{transform:translateY(-4px) rotate(3deg)}}
 .heart-strip{display:flex;justify-content:center;gap:16px;align-items:center;padding:10px 0 4px}.heart{font-size:25px;line-height:1;filter:drop-shadow(0 3px 4px rgba(60,35,90,.14));animation:floatHeart 3.5s ease-in-out infinite}.heart:nth-child(2n){animation-delay:.35s}.heart:nth-child(3n){animation-delay:.7s}.pink{color:#e95d9f}.purple{color:#7546b8}.olive{color:#718d45}.blue{color:#3e91cf}.yellow{color:#f1bd35}@keyframes floatHeart{0%,100%{transform:translateY(0) rotate(-3deg)}50%{transform:translateY(-4px) rotate(3deg)}}
 .draw-notice{margin:18px 0;padding:20px;border-radius:22px;text-align:center;background:linear-gradient(135deg,#fff7fb,#f7f3ff,#f5fbf7);border:2px solid #e6d8f5;box-shadow:0 8px 24px rgba(91,57,125,.08)}.draw-notice strong{display:block;color:var(--purple);font-size:19px;letter-spacing:.8px;margin:5px 0 7px}.draw-notice p{margin:0;color:#4e4657;font-size:14px;line-height:1.55}.draw-hearts{font-size:22px;letter-spacing:4px;margin-bottom:4px}
-*,*::before,*::after{font-family:"Montserrat",Arial,sans-serif !important;}
+*{font-family:"Montserrat",sans-serif!important;}
 </style>
 </head>
 <body>
@@ -96,13 +96,13 @@ h1{margin:16px 0 7px;font-size:clamp(31px,6vw,58px);line-height:1;font-weight:90
 
 <section class="card">
   <h2 class="section-title">Seus dados</h2>
-  <p class="section-sub">Informe seus dados para gerar o Pix e finalizar sua reserva.</p>
+  <p class="section-sub">Informe seus dados para reservar seus números e gerar o Pix.</p>
   <div class="form-grid">
     <div class="field"><label for="name">Nome completo</label><input id="name" class="input" placeholder="Digite seu nome" autocomplete="name"></div>
     <div class="field"><label for="phone">WhatsApp</label><input id="phone" class="input" placeholder="(00) 00000-0000" inputmode="tel" autocomplete="tel"></div>
     <div class="field full"><label for="email">E-mail</label><input id="email" class="input" placeholder="voce@email.com" type="email" autocomplete="email"></div>
   </div>
-  <button id="generateBtn" class="btn" onclick="generatePix()">Gerar Pix</button>
+  <button id="generateBtn" class="btn" onclick="reserve()">Reservar números e gerar Pix</button>
   <div id="dataMsg"></div>
 </section>
 
@@ -114,10 +114,10 @@ h1{margin:16px 0 7px;font-size:clamp(31px,6vw,58px);line-height:1;font-weight:90
       <p><strong>Pix Copia e Cola</strong></p>
       <div id="code" class="code"></div>
       <button class="btn copy" onclick="copyPix()">Copiar código Pix</button>
-      <div class="notice">A confirmação da sua reserva acontece automaticamente após a finalização.</div>
+      <div class="notice">Sua reserva foi registrada automaticamente. O sistema registra a reserva, mas não confirma o pagamento bancário.</div>
     </div>
   </div>
-  <button id="reserveBtn" class="btn" onclick="reserve()">Finalizar minha reserva</button>
+  
   <div id="reserveMsg"></div>
 </section>
 
@@ -131,9 +131,8 @@ const money=v=>Number(v).toFixed(2).replace('.',',');
 async function load(){try{const r=await fetch('/api/rifa');raffle=await r.json();sold=new Set(raffle.sold||[]);draw();}catch(e){$('dataMsg').className='msg err';$('dataMsg').textContent='Não foi possível carregar os números. Atualize a página.'}}
 function draw(){const g=$('grid');g.innerHTML='';for(let i=1;i<=raffle.quantity;i++){const b=document.createElement('button');b.type='button';b.className='num';b.textContent=String(i).padStart(2,'0');if(sold.has(i)){b.classList.add('busy');b.disabled=true;b.title='Número já reservado';}else{if(selected.includes(i))b.classList.add('sel');b.onclick=()=>toggle(i,b)}g.appendChild(b)}$('reserved').textContent=sold.size;$('available').textContent=raffle.quantity-sold.size;const pct=Math.round((sold.size/raffle.quantity)*100);$('salePercent').textContent=pct+'%';$('saleFill').style.width=Math.min(pct,100)+'%';$('drawReady').classList.toggle('show',pct>=70)}
 function toggle(n,b){if(selected.includes(n)){selected=selected.filter(x=>x!==n);b.classList.remove('sel')}else{selected.push(n);selected.sort((a,b)=>a-b);b.classList.add('sel')}$('summary').innerHTML=selected.length?'<b>Seus números:</b> '+selected.map(n=>String(n).padStart(2,'0')).join(', ')+'<br><b>Total:</b> R$ '+money(selected.length*raffle.price):'Nenhum número selecionado.';if($('pixCard').style.display==='block')$('pixCard').style.display='none'}
-async function generatePix(){const m=$('dataMsg');m.className='msg';m.textContent='';if(!selected.length){m.className='msg err';m.textContent='Selecione pelo menos um número.';return}if(!$('name').value.trim()||!$('phone').value.trim()||!$('email').value.trim()){m.className='msg err';m.textContent='Preencha nome, WhatsApp e e-mail.';return}const btn=$('generateBtn');btn.disabled=true;btn.textContent='Gerando Pix...';try{const r=await fetch('/api/pix?numbers='+selected.join(','));const d=await r.json();if(!r.ok)throw Error(d.error);pixCode=d.pix;$('amount').textContent='Valor total: R$ '+money(d.amount);$('qr').src=d.qr;$('code').textContent=d.pix;$('pixCard').style.display='block';$('pixCard').scrollIntoView({behavior:'smooth',block:'center'});}catch(e){m.className='msg err';m.textContent=e.message||'Não foi possível gerar o Pix.'}finally{btn.disabled=false;btn.textContent='Gerar Pix'}}
 async function copyPix(){if(!pixCode)return;try{await navigator.clipboard.writeText(pixCode);const b=document.querySelector('.copy');const old=b.textContent;b.textContent='Código copiado';setTimeout(()=>b.textContent=old,1800)}catch(e){alert('Não foi possível copiar automaticamente. Selecione e copie o código.')}}
-async function reserve(){const m=$('reserveMsg');m.className='msg';m.textContent='';if(!pixCode){m.className='msg err';m.textContent='Gere o Pix antes de finalizar a reserva.';return}const btn=$('reserveBtn');btn.disabled=true;btn.textContent='Finalizando...';try{const r=await fetch('/api/reservar',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:$('name').value.trim(),phone:$('phone').value.trim(),email:$('email').value.trim(),numbers:selected})});const d=await r.json();if(!r.ok)throw Error(d.error);m.className='msg ok';m.innerHTML='<b>Reserva realizada com sucesso.</b><br>Números: <b>'+d.reserva.numbers.map(n=>String(n).padStart(2,'0')).join(', ')+'</b><br>Valor: <b>R$ '+money(d.reserva.amount)+'</b><br><br>Obrigado por semear na próxima geração.';selected.forEach(n=>sold.add(n));selected=[];pixCode='';draw();$('summary').textContent='Nenhum número selecionado.';$('pixCard').scrollIntoView({behavior:'smooth',block:'center'});}catch(e){m.className='msg err';m.textContent=e.message||'Não foi possível concluir a reserva.';await load()}finally{btn.disabled=false;btn.textContent='Finalizar minha reserva'}}
+async function reserve(){const m=$('dataMsg');m.className='msg';m.textContent='';if(!selected.length){m.className='msg err';m.textContent='Selecione pelo menos um número.';return}if(!$('name').value.trim()||!$('phone').value.trim()||!$('email').value.trim()){m.className='msg err';m.textContent='Preencha nome, WhatsApp e e-mail.';return}const btn=$('generateBtn');btn.disabled=true;btn.textContent='Registrando reserva...';try{const r=await fetch('/api/reservar',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:$('name').value.trim(),phone:$('phone').value.trim(),email:$('email').value.trim(),numbers:selected})});const d=await r.json();if(!r.ok)throw Error(d.error);pixCode=d.pix;$('amount').textContent='Valor total: R$ '+money(d.reserva.amount);$('qr').src=d.qr;$('code').textContent=d.pix;$('pixCard').style.display='block';m.className='msg ok';m.innerHTML='<b>Reserva realizada com sucesso.</b><br>Seus números: <b>'+d.reserva.numbers.map(n=>String(n).padStart(2,'0')).join(', ')+'</b><br>Valor: <b>R$ '+money(d.reserva.amount)+'</b>';selected.forEach(n=>sold.add(n));selected=[];draw();$('summary').textContent='Nenhum número selecionado.';$('pixCard').scrollIntoView({behavior:'smooth',block:'center'});}catch(e){m.className='msg err';m.textContent=e.message||'Não foi possível concluir a reserva.';await load()}finally{btn.disabled=false;btn.textContent='Reservar números e gerar Pix'}}
 load();
 </script>
 </body>

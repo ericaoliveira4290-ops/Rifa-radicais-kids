@@ -1,204 +1,133 @@
-const express = require("express");
-const fs = require("fs");
-const path = require("path");
-const nodemailer = require("nodemailer");
-const QRCode = require("qrcode");
+const express = require('express');
+const path = require('path');
+const fs = require('fs');
+const QRCode = require('qrcode');
+const nodemailer = require('nodemailer');
+const { createClient } = require('@supabase/supabase-js');
 
 const app = express();
 const PORT = process.env.PORT || 10000;
-const DB = path.join(__dirname, "rifa.json");
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || '';
+const SUPABASE_URL = process.env.SUPABASE_URL || '';
+const SUPABASE_SECRET_KEY = process.env.SUPABASE_SECRET_KEY || '';
+const EMAIL_USER = process.env.EMAIL_USER || '';
+const EMAIL_PASS = process.env.EMAIL_PASS || '';
+const EMAIL_TO = process.env.EMAIL_TO || 'Oliveira.ericamenezes@gmail.com';
 
-const INITIAL = {
-  title: "Rifa Radicais Kids | Juvenil - Encontro com Deus",
-  prize: "R$ 100,00",
+const CONFIG = {
+  title: 'Rifa Radicais Kids | Juvenil — Encontro com Deus',
+  prize: 'R$ 100,00',
   quantity: 100,
   price: 10,
-  responsible: "Fernanda Maria Alves de Souza",
-  pixKey: "62996251975",
-  pixName: "Fernanda Maria Alves de Souza",
-  pixCity: "GOIANIA",
-  reservations: {}
+  responsible: 'Fernanda Maria Alves de Souza',
+  pix: '62996251975',
+  pixName: 'Fernanda Maria Alves de Souza',
+  pixCity: 'GOIANIA',
+  drawTarget: 70
 };
 
-function load() {
-  if (!fs.existsSync(DB)) fs.writeFileSync(DB, JSON.stringify(INITIAL, null, 2));
-  try { return JSON.parse(fs.readFileSync(DB, "utf8")); }
-  catch { return JSON.parse(JSON.stringify(INITIAL)); }
+if (!SUPABASE_URL || !SUPABASE_SECRET_KEY) {
+  console.warn('SUPABASE_URL/SUPABASE_SECRET_KEY ainda não configurados.');
 }
-function save(d) { fs.writeFileSync(DB, JSON.stringify(d, null, 2)); }
-function esc(v) {
-  return String(v ?? "").replace(/&/g,"&amp;").replace(/</g,"&lt;")
-    .replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;");
-}
-function money(v) { return Number(v).toFixed(2).replace(".", ","); }
+const supabase = (SUPABASE_URL && SUPABASE_SECRET_KEY)
+  ? createClient(SUPABASE_URL, SUPABASE_SECRET_KEY, { auth: { persistSession: false } })
+  : null;
 
-function crc16(s) {
+app.use(express.json({ limit: '200kb' }));
+app.use(express.static(__dirname));
+
+function crc16(payload) {
   let crc = 0xffff;
-  for (let i=0; i<s.length; i++) {
-    crc ^= s.charCodeAt(i) << 8;
-    for (let j=0; j<8; j++)
-      crc = (crc & 0x8000) ? ((crc << 1) ^ 0x1021) & 0xffff : (crc << 1) & 0xffff;
+  for (let i = 0; i < payload.length; i++) {
+    crc ^= payload.charCodeAt(i) << 8;
+    for (let j = 0; j < 8; j++) crc = (crc & 0x8000) ? ((crc << 1) ^ 0x1021) & 0xffff : (crc << 1) & 0xffff;
   }
-  return crc.toString(16).toUpperCase().padStart(4,"0");
+  return crc.toString(16).toUpperCase().padStart(4, '0');
 }
 function field(id, value) {
   const s = String(value);
-  return id + String(s.length).padStart(2,"0") + s;
+  return id + String(s.length).padStart(2, '0') + s;
 }
-function makePix(amount, txid) {
-  const d = load();
-  let key = String(d.pixKey).replace(/\D/g,"");
-  if (key.length === 11) key = "+55" + key;
-  const name = String(d.pixName).normalize("NFD").replace(/[\u0300-\u036f]/g,"")
-    .replace(/[^A-Za-z0-9 ]/g,"").slice(0,25);
-  const city = String(d.pixCity).replace(/[^A-Za-z0-9 ]/g,"").slice(0,15);
-  const merchant = field("00","br.gov.bcb.pix") + field("01",key);
-  const additional = field("05",txid);
-  let p = field("00","01") + field("26",merchant) + field("52","0000")
-    + field("53","986") + field("54",Number(amount).toFixed(2))
-    + field("58","BR") + field("59",name) + field("60",city)
-    + field("62",additional) + "6304";
-  return p + crc16(p);
+function pixPayload(amount) {
+  const merchant = field('26', field('00', 'BR.GOV.BCB.PIX') + field('01', CONFIG.pix));
+  const add = field('62', field('05', 'RIFA'));
+  const base = field('00', '01') + merchant + field('52', '0000') + field('53', '986') + field('54', Number(amount).toFixed(2)) + field('58', 'BR') + field('59', CONFIG.pixName.slice(0,25)) + field('60', CONFIG.pixCity.slice(0,15)) + add;
+  return base + '6304' + crc16(base + '6304');
 }
-
-function reservations() {
-  const d = load(), map = {};
-  Object.values(d.reservations || {}).forEach(r => { if (r && r.id) map[r.id] = r; });
-  return Object.values(map).sort((a,b)=>new Date(a.createdAt)-new Date(b.createdAt));
-}
-function mailer() {
-  if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) return null;
-  return nodemailer.createTransport({
-    service:"gmail",
-    auth:{user:process.env.EMAIL_USER, pass:process.env.EMAIL_PASS}
-  });
-}
-function relation() {
-  const rs = reservations();
-  if (!rs.length) return "<p>Nenhuma reserva registrada.</p>";
-  let h = '<table border="1" cellpadding="6" cellspacing="0" style="border-collapse:collapse;width:100%;font-family:Montserrat,Arial,sans-serif;font-size:12px"><tr><th>Nome</th><th>WhatsApp</th><th>E-mail</th><th>Números</th><th>Valor</th><th>Status</th><th>Data</th></tr>';
-  rs.forEach(r => h += `<tr><td>${esc(r.name)}</td><td>${esc(r.phone)}</td><td>${esc(r.email)}</td><td>${esc(r.numbers.join(", "))}</td><td>R$ ${money(r.amount)}</td><td>${esc(r.status)}</td><td>${new Date(r.createdAt).toLocaleString("pt-BR")}</td></tr>`);
-  return h + "</table>";
-}
-async function sendEmail(r) {
-  const t = mailer();
-  if (!t) return;
-  await t.sendMail({
-    from:process.env.EMAIL_USER,
-    to:process.env.EMAIL_TO || "Oliveira.ericamenezes@gmail.com",
-    subject:`🎟️ Nova reserva - ${r.id}`,
-    html:`<h2>🎟️ Nova reserva - Rifa Radicais Kids | Juvenil</h2>
-      <p><b>Nome:</b> ${esc(r.name)}</p>
-      <p><b>WhatsApp:</b> ${esc(r.phone)}</p>
-      <p><b>E-mail:</b> ${esc(r.email)}</p>
-      <p><b>Números:</b> ${esc(r.numbers.join(", "))}</p>
-      <p><b>Valor:</b> R$ ${money(r.amount)}</p>
-      <p><b>Código:</b> ${esc(r.id)}</p>
-      <p><b>Status:</b> ${esc(r.status)}</p>
-      <hr><h3>Relação atual das reservas</h3>${relation()}`
-  });
-}
-
-app.use(express.json({limit:"1mb"}));
-app.use(express.urlencoded({extended:true}));
-
-app.get("/", (req,res)=>res.sendFile(path.join(__dirname,"index.html")));
-app.get("/imagem-rifa", (req,res)=>{
-  const png=path.join(__dirname,"IMG-20260909-WA0152.png");
-  const jpg=path.join(__dirname,"IMG-20260909-WA0152.jpg");
-  if(fs.existsSync(png)) return res.sendFile(png);
-  if(fs.existsSync(jpg)) return res.sendFile(jpg);
-  res.status(404).send("Imagem não encontrada.");
-});
-app.get("/api/rifa",(req,res)=>{
-  const d=load();
-  res.json({
-    title:d.title, prize:d.prize, quantity:d.quantity, price:d.price,
-    responsible:d.responsible,
-    sold:Object.keys(d.reservations).map(Number).sort((a,b)=>a-b)
-  });
-});
-app.get("/api/pix",async(req,res)=>{
-  try {
-    const d=load();
-    const nums=[...new Set(String(req.query.numbers||"").split(",").map(Number).filter(Number.isInteger))].sort((a,b)=>a-b);
-    if(!nums.length) return res.status(400).json({error:"Selecione pelo menos um número."});
-    if(nums.some(n=>n<1||n>d.quantity)) return res.status(400).json({error:"Número inválido."});
-    const busy=nums.filter(n=>d.reservations[String(n)]);
-    if(busy.length) return res.status(409).json({error:"Número(s) já reservado(s): "+busy.join(", ")});
-    const amount=nums.length*Number(d.price);
-    const txid=("R"+Date.now()).slice(-25);
-    const pix=makePix(amount,txid);
-    res.json({amount,pix,qr:await QRCode.toDataURL(pix)});
-  } catch(e) {
-    console.error(e); res.status(500).json({error:"Não foi possível gerar o Pix."});
-  }
-});
-
-let reservationBusy=false;
-app.post("/api/reservar",async(req,res)=>{
-  if(reservationBusy) return res.status(409).json({error:"Aguarde um instante e tente novamente."});
-  reservationBusy=true;
-  try {
-    const d=load();
-    const name=String(req.body.name||"").trim();
-    const phone=String(req.body.phone||"").trim();
-    const email=String(req.body.email||"").trim();
-    const nums=[...new Set((Array.isArray(req.body.numbers)?req.body.numbers:[]).map(Number).filter(Number.isInteger))].sort((a,b)=>a-b);
-    if(!name||!phone||!email||!nums.length) return res.status(400).json({error:"Preencha nome, WhatsApp, e-mail e escolha os números."});
-    if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return res.status(400).json({error:"Digite um e-mail válido."});
-    const busy=nums.filter(n=>d.reservations[String(n)]);
-    if(busy.length) return res.status(409).json({error:"Número(s) já reservado(s): "+busy.join(", ")});
-    const r={
-      id:"RIFA-"+Math.random().toString(36).slice(2,10).toUpperCase(),
-      name,phone,email,numbers:nums,amount:nums.length*Number(d.price),
-      status:"Reserva realizada",createdAt:new Date().toISOString()
-    };
-    nums.forEach(n=>d.reservations[String(n)]=r);
-    save(d);
-    try { await sendEmail(r); } catch(e) { console.error("Falha no e-mail:",e); }
-    res.json({ok:true,reserva:r});
-  } catch(e) {
-    console.error(e); res.status(500).json({error:"Não foi possível concluir a reserva."});
-  } finally { reservationBusy=false; }
-});
-
-app.listen(PORT,"0.0.0.0",()=>console.log("Rifa Radicais Kids online na porta "+PORT));
-
-function adminAuthorized(req) {
-  const password = process.env.ADMIN_PASSWORD;
-  if (!password) return false;
-  const header = String(req.headers.authorization || "");
-  if (!header.startsWith("Basic ")) return false;
-  let decoded = "";
-  try { decoded = Buffer.from(header.slice(6), "base64").toString("utf8"); } catch { return false; }
-  const sep = decoded.indexOf(":");
-  if (sep < 0) return false;
-  return decoded.slice(sep + 1) === password;
-}
-function requireAdmin(req,res,next) {
-  if (!process.env.ADMIN_PASSWORD) return res.status(503).send("Área do organizador indisponível: configure ADMIN_PASSWORD no Render.");
-  if (!adminAuthorized(req)) {
-    res.set("WWW-Authenticate", 'Basic realm="Rifa Radicais Kids - Organizador"');
-    return res.status(401).send("Acesso restrito ao organizador.");
-  }
+function admin(req, res, next) {
+  if (!ADMIN_PASSWORD) return res.status(503).send('Área do organizador indisponível: configure ADMIN_PASSWORD no Render.');
+  const auth = req.headers.authorization || '';
+  if (!auth.startsWith('Basic ')) { res.set('WWW-Authenticate', 'Basic realm="Área do Organizador"'); return res.status(401).send('Login necessário.'); }
+  const decoded = Buffer.from(auth.slice(6), 'base64').toString('utf8');
+  const [user, pass] = decoded.split(':');
+  if (user !== 'admin' || pass !== ADMIN_PASSWORD) { res.set('WWW-Authenticate', 'Basic realm="Área do Organizador"'); return res.status(401).send('Usuário ou senha inválidos.'); }
   next();
 }
+async function getSold() {
+  if (!supabase) throw new Error('Banco de dados ainda não configurado no Render.');
+  const { data, error } = await supabase.from('rifa_numeros').select('number').order('number');
+  if (error) throw error;
+  return (data || []).map(r => Number(r.number));
+}
+async function sendReservationEmail(r) {
+  if (!EMAIL_USER || !EMAIL_PASS || !EMAIL_TO) return;
+  const transporter = nodemailer.createTransport({ service: 'gmail', auth: { user: EMAIL_USER, pass: EMAIL_PASS } });
+  await transporter.sendMail({
+    from: `Rifa Radicais Kids <${EMAIL_USER}>`, to: EMAIL_TO,
+    subject: `Nova reserva — números ${r.numbers.map(n => String(n).padStart(2,'0')).join(', ')}`,
+    text: `Nova reserva registrada.\n\nNome: ${r.name}\nWhatsApp: ${r.phone}\nE-mail: ${r.email}\nNúmeros: ${r.numbers.join(', ')}\nQuantidade: ${r.numbers.length}\nValor: R$ ${r.amount.toFixed(2).replace('.', ',')}\nStatus: reservado\nData/hora: ${r.createdAt}`
+  });
+}
 
-app.get("/admin", requireAdmin, (req,res)=>{
-  const d=load();
-  const rs=reservations();
-  const sold=Object.keys(d.reservations||{}).map(Number).length;
-  const pct=Math.round((sold/d.quantity)*100);
-  const total=rs.reduce((sum,r)=>sum+Number(r.amount||0),0);
-  const rows=rs.map(r=>`<tr><td>${esc(r.name)}</td><td>${esc(r.phone)}</td><td>${esc(r.email)}</td><td>${esc(r.numbers.join(", "))}</td><td>R$ ${money(r.amount)}</td><td>${esc(r.status)}</td><td>${new Date(r.createdAt).toLocaleString("pt-BR")}</td></tr>`).join("");
-  res.send(`<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Organizador | Rifa Radicais Kids</title><link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800;900&display=swap" rel="stylesheet"><style>*,*::before,*::after{font-family:Montserrat,Arial,sans-serif !important} body{margin:0;font-family:Montserrat,Arial,sans-serif;background:#faf7ff;color:#2f2440}.wrap{max-width:1100px;margin:auto;padding:28px 18px}.top{background:linear-gradient(135deg,#7546b8,#e95d9f);color:#fff;border-radius:24px;padding:25px}.top h1{margin:0 0 6px;font-size:28px}.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:18px 0}.card{background:#fff;border:1px solid #eadff4;border-radius:18px;padding:18px}.card b{display:block;font-size:27px;color:#7546b8}.progress{height:14px;background:#eee9f2;border-radius:99px;overflow:hidden}.fill{height:100%;width:${Math.min(pct,100)}%;background:linear-gradient(90deg,#e95d9f,#7546b8,#718d45,#3e91cf,#f1bd35)}.actions{display:flex;gap:10px;margin:16px 0;flex-wrap:wrap}.btn{display:inline-block;padding:12px 16px;border-radius:12px;text-decoration:none;font-weight:800;background:#7546b8;color:#fff}.btn.green{background:#718d45}.table{overflow:auto;background:#fff;border:1px solid #eadff4;border-radius:18px}table{width:100%;border-collapse:collapse;min-width:900px}th,td{padding:11px;border-bottom:1px solid #eee;text-align:left;font-size:12px}th{background:#f6f0fb;color:#7546b8} .meta{font-size:13px;color:#6c5c78;margin-top:8px}@media(max-width:700px){.cards{grid-template-columns:repeat(2,1fr)}} </style></head><body><div class="wrap"><div class="top"><h1>Rifa Radicais Kids | Área do Organizador</h1><div>❤️ 💜 💚 💙 💛 Acompanhamento das reservas</div></div><div class="cards"><div class="card"><b>${sold}</b>Números vendidos</div><div class="card"><b>${d.quantity-sold}</b>Disponíveis</div><div class="card"><b>${pct}%</b>Progresso</div><div class="card"><b>R$ ${money(total)}</b>Total reservado</div></div><div class="card"><strong>Meta para o sorteio: 70%</strong><div class="progress"><div class="fill"></div></div><div class="meta">${pct>=70?"Meta atingida — sorteio liberado!":"Faltam "+Math.max(0,70-sold)+" números para atingir a meta."}</div></div><div class="actions"><a class="btn green" href="/admin.csv">Baixar lista em CSV</a><a class="btn" href="/">Voltar para a rifa</a></div><div class="table"><table><thead><tr><th>Nome</th><th>WhatsApp</th><th>E-mail</th><th>Números</th><th>Valor</th><th>Status</th><th>Data</th></tr></thead><tbody>${rows || '<tr><td colspan="7">Nenhuma reserva registrada.</td></tr>'}</tbody></table></div></div></body></html>`);
+app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'index.html')));
+app.get('/imagem-rifa', (req, res) => {
+  const p = path.join(__dirname, 'IMG-20260909-WA0152.png');
+  if (fs.existsSync(p)) return res.sendFile(p);
+  res.status(404).end();
 });
 
-app.get("/admin.csv", requireAdmin, (req,res)=>{
-  const rows=reservations();
-  const lines=[["Nome","WhatsApp","E-mail","Números","Valor","Status","Data"],...rows.map(r=>[r.name,r.phone,r.email,r.numbers.join(" | "),Number(r.amount).toFixed(2).replace(".",","),r.status,new Date(r.createdAt).toLocaleString("pt-BR")])];
-  const csv="\\ufeff"+lines.map(row=>row.map(v=>'"'+String(v??"").replace(/"/g,'""')+'"').join(";")).join("\\r\\n");
-  res.set({"Content-Type":"text/csv; charset=utf-8","Content-Disposition":"attachment; filename=rifa-radicais-kids-reservas.csv"});
-  res.send(csv);
+app.get('/api/rifa', async (req, res) => {
+  try {
+    const sold = await getSold();
+    res.json({ ...CONFIG, sold });
+  } catch (e) { res.status(500).json({ error: e.message }); }
 });
+
+app.post('/api/reservar', async (req, res) => {
+  try {
+    if (!supabase) return res.status(503).json({ error: 'Banco de dados ainda não configurado.' });
+    const { name, phone, email, numbers } = req.body || {};
+    const nums = [...new Set((numbers || []).map(Number).filter(n => Number.isInteger(n) && n >= 1 && n <= CONFIG.quantity))].sort((a,b)=>a-b);
+    if (!name?.trim() || !phone?.trim() || !email?.trim() || !nums.length) return res.status(400).json({ error: 'Preencha nome, WhatsApp, e-mail e selecione pelo menos um número.' });
+    const amount = nums.length * CONFIG.price;
+    const { data, error } = await supabase.rpc('reservar_numeros', {
+      p_numbers: nums, p_name: name.trim(), p_phone: phone.trim(), p_email: email.trim(), p_amount: amount
+    });
+    if (error) {
+      const msg = String(error.message || '');
+      if (/já reservado|reservado|duplicate|unique/i.test(msg)) return res.status(409).json({ error: 'Um ou mais números escolhidos já foram reservados. Atualize a página e escolha outros.' });
+      throw error;
+    }
+    const createdAt = new Date().toISOString();
+    const reserva = { id: data.id, numbers: nums, name: name.trim(), phone: phone.trim(), email: email.trim(), amount, status: 'reservado', createdAt };
+    const pix = pixPayload(amount);
+    const qr = await QRCode.toDataURL(pix, { width: 320, margin: 1 });
+    try { await sendReservationEmail(reserva); } catch (mailErr) { console.error('Falha ao enviar e-mail:', mailErr.message); }
+    res.json({ ok: true, reserva, pix, qr });
+  } catch (e) { console.error(e); res.status(500).json({ error: 'Não foi possível registrar a reserva agora. Tente novamente.' }); }
+});
+
+app.get('/admin', admin, async (req, res) => {
+  try {
+    if (!supabase) return res.status(503).send('Banco de dados ainda não configurado.');
+    const { data: reservations, error } = await supabase.from('rifa_reservas').select('*').order('created_at', { ascending: false });
+    if (error) throw error;
+    const { data: nums, error: nerr } = await supabase.from('rifa_numeros').select('number,reservation_id').order('number');
+    if (nerr) throw nerr;
+    const grouped = (reservations || []).map(r => ({...r, numbers:(nums||[]).filter(n=>n.reservation_id===r.id).map(n=>n.number).sort((a,b)=>a-b)}));
+    const sold = nums?.length || 0, pct = Math.round(sold/CONFIG.quantity*100), total = grouped.reduce((s,r)=>s+Number(r.amount||0),0);
+    res.type('html').send(`<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"><title>Área do Organizador</title><style>*{box-sizing:border-box;font-family:"Montserrat",sans-serif!important}body{margin:0;background:#f4f0ff;color:#3b2a4b}.wrap{max-width:1100px;margin:auto;padding:25px}.head,.card{background:#fff;border-radius:22px;padding:22px;margin-bottom:18px;box-shadow:0 10px 30px #4b237f14}.head h1{margin:0;color:#7440c7}.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.stat{padding:18px;border-radius:16px;background:#f8f5ff}.stat b{display:block;font-size:25px;color:#7440c7}.table{width:100%;border-collapse:collapse}.table th,.table td{padding:11px;border-bottom:1px solid #eee;text-align:left;font-size:13px}.btn{border:0;border-radius:12px;padding:12px 16px;background:#7440c7;color:#fff;font-weight:800;cursor:pointer}@media(max-width:750px){.stats{grid-template-columns:1fr 1fr}.table{display:block;overflow:auto;white-space:nowrap}}</style></head><body><div class="wrap"><div class="head"><h1>Área do Organizador</h1><p>Rifa Radicais Kids | Juvenil — Encontro com Deus</p><button class="btn" onclick="downloadCSV()">Baixar lista CSV</button></div><div class="card"><div class="stats"><div class="stat"><b>${sold}</b>Números reservados</div><div class="stat"><b>${CONFIG.quantity-sold}</b>Disponíveis</div><div class="stat"><b>${pct}%</b>Percentual vendido</div><div class="stat"><b>R$ ${total.toFixed(2).replace('.',',')}</b>Total reservado</div></div></div><div class="card"><table class="table"><thead><tr><th>Data/hora</th><th>Nome</th><th>WhatsApp</th><th>E-mail</th><th>Números</th><th>Valor</th><th>Status</th></tr></thead><tbody>${grouped.map(r=>`<tr><td>${new Date(r.created_at).toLocaleString('pt-BR')}</td><td>${esc(r.name)}</td><td>${esc(r.phone)}</td><td>${esc(r.email)}</td><td>${r.numbers.map(n=>String(n).padStart(2,'0')).join(', ')}</td><td>R$ ${Number(r.amount).toFixed(2).replace('.',',')}</td><td>${esc(r.status)}</td></tr>`).join('')}</tbody></table></div></div><script>const rows=${JSON.stringify(grouped).replace(/</g,'\\u003c')};function esc(s){return String(s).replace(/[&<>\"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]))}function downloadCSV(){const h=['Data/hora','Nome','WhatsApp','E-mail','Números','Valor','Status'];const lines=[h,...rows.map(r=>[new Date(r.created_at).toLocaleString('pt-BR'),r.name,r.phone,r.email,r.numbers.join(' '),Number(r.amount).toFixed(2),r.status])].map(a=>a.map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(';'));const b=new Blob(['\\ufeff'+lines.join('\\n')],{type:'text/csv;charset=utf-8'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='rifa-radicais-kids.csv';a.click()}</script></body></html>`);
+  } catch(e) { res.status(500).send('Não foi possível carregar a área do organizador.'); }
+});
+
+app.listen(PORT, '0.0.0.0', () => console.log(`Rifa online na porta ${PORT}`));
