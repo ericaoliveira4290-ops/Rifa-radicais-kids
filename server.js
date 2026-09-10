@@ -152,7 +152,7 @@ app.post("/api/reservar",async(req,res)=>{
     const r={
       id:"RIFA-"+Math.random().toString(36).slice(2,10).toUpperCase(),
       name,phone,email,numbers:nums,amount:nums.length*Number(d.price),
-      status:"Reserva confirmada",createdAt:new Date().toISOString()
+      status:"Reserva realizada",createdAt:new Date().toISOString()
     };
     nums.forEach(n=>d.reservations[String(n)]=r);
     save(d);

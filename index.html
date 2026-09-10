@@ -2,58 +2,137 @@
 <html lang="pt-BR">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#7B3FC6">
 <title>Rifa Radicais Kids | Juvenil - Encontro com Deus</title>
 <style>
-*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:linear-gradient(#dff8ff,#f7edff);color:#4d3b63}.wrap{max-width:760px;width:94%;margin:0 auto 50px}.top{padding:20px 8px;text-align:center}.top h1{margin:0;font-size:30px;color:#8a55d5;text-shadow:1px 2px #fff}.card{background:#fff;border-radius:22px;padding:18px;margin:14px 0;box-shadow:0 7px 22px #7c5aa21f;border:2px solid #fff}.hero{width:100%;max-height:560px;object-fit:cover;border-radius:20px;display:block}.purpose{text-align:center;background:linear-gradient(135deg,#f1d9ff,#ffe1f2)}.purpose h2{color:#7c43b9;margin-top:0}.purpose p{font-size:17px;line-height:1.55;margin:8px 0}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;text-align:center}.stat{background:#faf7ff;border-radius:15px;padding:14px;border:2px solid #eee3ff}.stat b{display:block;font-size:22px;color:#ef6e78;margin-bottom:5px}.grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}.num{border:0;border-radius:11px;padding:12px 2px;background:#d9f4df;color:#256d3b;font-weight:700;cursor:pointer}.num.sel{background:#8b55d5;color:#fff}.num.busy{background:#b7b7b7;color:#fff;cursor:not-allowed}.input{width:100%;padding:13px;margin:7px 0;border:2px solid #eadfff;border-radius:11px;font-size:16px;outline:none}.input:focus{border-color:#a96ae1}.btn{width:100%;border:0;border-radius:13px;padding:14px;margin-top:10px;background:#8b55d5;color:#fff;font-weight:700;font-size:16px;cursor:pointer;box-shadow:0 4px 0 #7141a9}.btn:active{transform:translateY(2px);box-shadow:0 2px 0 #7141a9}.summary{padding:13px;border-radius:12px;background:#f5efff;margin-top:12px}.pix{display:none}.qr{display:block;width:245px;max-width:85%;margin:15px auto}.code{background:#f7f7f7;padding:12px;border-radius:12px;word-break:break-all;font-size:12px;border:1px solid #eee}.msg{padding:12px;border-radius:12px;margin-top:10px;text-align:center}.ok{background:#e6faea;color:#176a2a}.err{background:#ffe8e8;color:#a00000}.small{text-align:center;color:#76677f;font-size:13px;line-height:1.45}.center{text-align:center}.hide{display:none}
-@media(max-width:520px){.top h1{font-size:24px}.grid{grid-template-columns:repeat(5,1fr);gap:6px}.num{padding:10px 1px}.stats{grid-template-columns:1fr 1fr}.stat:last-child{grid-column:1/-1}}
+:root{
+ --purple:#7438b7;--purple2:#9a62dc;--pink:#f28ac8;--pink2:#ffd9ef;
+ --blue:#55cbe3;--blue2:#e4f9ff;--yellow:#ffd45a;--ink:#38284b;--muted:#746680;
+ --green:#34b889;--green2:#e5f8ef;--red:#d95d70;--white:#fff;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Arial,sans-serif;color:var(--ink);
+background:radial-gradient(circle at 10% 5%,#fff 0 4%,transparent 18%),
+linear-gradient(180deg,#dff8ff 0,#eef9ff 26%,#f8efff 68%,#fff6fb 100%);min-height:100vh}
+body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.28;
+background-image:radial-gradient(circle,#fff 0 5px,transparent 6px);background-size:95px 95px}
+.wrap{max-width:900px;width:94%;margin:auto;padding:18px 0 55px;position:relative}
+.header{text-align:center;padding:14px 8px 8px}
+.badge{display:inline-block;background:var(--white);border:2px solid #fff;border-radius:999px;padding:7px 15px;
+font-weight:800;color:var(--purple);box-shadow:0 8px 25px #7042a51c}
+h1{font-size:clamp(27px,5vw,45px);line-height:1.05;margin:14px 0 7px;color:var(--purple);
+letter-spacing:-1px}
+.subtitle{font-size:clamp(15px,2.5vw,19px);font-weight:700;color:#684e78}
+.card{background:rgba(255,255,255,.96);border:1px solid #fff;border-radius:26px;margin:17px 0;padding:24px;
+box-shadow:0 18px 45px rgba(74,37,105,.10)}
+.hero-card{padding:12px}
+.hero{display:block;width:100%;height:auto;max-height:none;object-fit:contain;border-radius:20px}
+.ribbon{background:linear-gradient(90deg,var(--purple),var(--pink));color:#fff;border-radius:18px;
+padding:15px;text-align:center;font-size:20px;font-weight:900;margin:2px 0 18px;box-shadow:0 8px 22px #7438b72a}
+.purpose{background:linear-gradient(135deg,#fff,#fff1fb);text-align:center;border:2px solid #f7d8ed}
+.purpose h2{margin:0 0 8px;color:var(--purple);font-size:25px}
+.purpose p{margin:7px auto;max-width:720px;line-height:1.55;font-size:16px}
+.highlight{display:inline-block;margin-top:8px;padding:9px 15px;border-radius:999px;background:#f3e8ff;color:var(--purple);font-weight:900}
+.info{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.info-box{padding:17px;border-radius:18px;background:#fbf8ff;border:1px solid #eadfff;text-align:center}
+.info-box b{display:block;color:var(--purple);font-size:25px;margin-bottom:4px}
+.section-title{margin:0 0 7px;font-size:24px;color:var(--purple)}
+.section-sub{margin:0 0 17px;color:var(--muted)}
+.legend{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px;font-size:13px;font-weight:700}
+.legend span{padding:7px 10px;border-radius:999px}
+.l-available{background:var(--green2);color:#207653}.l-selected{background:#eee2ff;color:var(--purple)}.l-busy{background:#eee;color:#777}
+.grid{display:grid;grid-template-columns:repeat(10,1fr);gap:7px}
+.num{border:0;border-radius:10px;padding:11px 2px;background:var(--green2);color:#207653;font-weight:900;
+cursor:pointer;transition:.15s;box-shadow:inset 0 0 0 1px #d2efdf}
+.num:hover{transform:translateY(-1px);filter:brightness(.98)}
+.num.sel{background:var(--purple);color:#fff;box-shadow:0 5px 12px #7438b744}
+.num.busy{background:#d4d4d4;color:#fff;cursor:not-allowed;box-shadow:none}
+.summary{margin-top:16px;padding:15px;border-radius:16px;background:#f8f2ff;border:1px solid #eadfff}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.field{margin:0 0 10px}.field.full{grid-column:1/-1}
+label{display:block;font-size:13px;font-weight:800;margin:0 0 6px;color:#5d496a}
+.input{width:100%;padding:14px 15px;border:2px solid #eadfff;border-radius:14px;font-size:16px;outline:0;color:var(--ink);background:#fff}
+.input:focus{border-color:var(--purple2);box-shadow:0 0 0 4px #9a62dc18}
+.btn{width:100%;border:0;border-radius:14px;padding:15px;margin-top:5px;background:linear-gradient(90deg,var(--purple),var(--purple2));
+color:#fff;font-weight:900;font-size:16px;cursor:pointer;box-shadow:0 5px 0 #5c2c91;transition:.12s}
+.btn:hover{filter:brightness(1.04)}.btn:active{transform:translateY(2px);box-shadow:0 3px 0 #5c2c91}
+.pix{display:none;border:2px solid #ead8ff}
+.pix-head{text-align:center}.pix-head h2{margin:0;color:var(--purple)}
+.total{font-size:23px;font-weight:900;color:var(--purple);margin:8px 0}
+.pix-area{display:grid;grid-template-columns:270px 1fr;gap:22px;align-items:center}
+.qr{display:block;width:250px;max-width:100%;margin:auto;border-radius:12px}
+.code{background:#f8f7fa;border:1px solid #e6e1ea;border-radius:13px;padding:12px;word-break:break-all;font-size:12px;max-height:150px;overflow:auto}
+.copy{background:var(--green);box-shadow:0 4px 0 #218465}
+.notice{margin-top:13px;padding:12px;border-radius:13px;background:#fff7d9;border:1px solid #ffe59a;font-size:13px;line-height:1.45}
+.msg{padding:13px;border-radius:13px;margin-top:10px;text-align:center;font-weight:700}.ok{background:#e5f8ef;color:#176c49}.err{background:#ffe8ec;color:#a52d43}
+.footer{text-align:center;color:var(--muted);font-size:13px;line-height:1.5;margin-top:20px}
+@media(max-width:720px){.grid{grid-template-columns:repeat(5,1fr)}.pix-area{grid-template-columns:1fr}.qr{width:240px}}
+@media(max-width:520px){.wrap{width:96%;padding-top:8px}.card{padding:17px;border-radius:21px}.info{grid-template-columns:1fr}.form-grid{grid-template-columns:1fr}.field.full{grid-column:auto}.num{padding:10px 1px;font-size:13px}.purpose p{font-size:15px}}
 </style>
 </head>
 <body>
 <div class="wrap">
-<header class="top"><h1>🌟 Rifa Radicais Kids | Juvenil 🌟</h1><div>💜 Encontro com Deus 💜</div></header>
+<header class="header">
+<div class="badge">🌟 RADICAIS KIDS | JUVENIL 🌟</div>
+<h1>Encontro com Deus</h1>
+<div class="subtitle">Uma rifa que semeia na vida da próxima geração 💜</div>
+</header>
 
-<div class="card"><img class="hero" src="/imagem-rifa" alt="Encontro com Deus - Radicais Kids"></div>
+<div class="card hero-card"><img class="hero" src="/imagem-rifa" alt="Encontro com Deus - Radicais Kids"></div>
 
 <div class="card purpose">
 <h2>💜 Faça parte desse propósito!</h2>
-<p><b>Invista para que crianças e juvenis tenham um Encontro com Deus.</b></p>
-<p>Seja um canal de Deus na vida de uma criança! Cada número é uma semente para a próxima geração. ❤️‍🔥</p>
+<p><b>Invista para que crianças e juvenis tenham a oportunidade de viver um Encontro com Deus.</b></p>
+<p>Seja um canal de Deus na vida de uma criança. Cada número escolhido representa uma semente de amor, fé e propósito na próxima geração. ❤️‍🔥</p>
+<div class="highlight">✨ Juntos, podemos alcançar vidas!</div>
+</div>
+
+<div class="ribbon">🎁 Prêmio de R$ 200,00 no Pix</div>
+
+<div class="card">
+<div class="info">
+<div class="info-box"><b id="available">100</b>números disponíveis</div>
+<div class="info-box"><b id="reserved">0</b>números reservados</div>
+<div class="info-box"><b>R$ 10,00</b>por número</div>
+</div>
 </div>
 
 <div class="card">
-<div class="stats">
-<div class="stat"><b id="available">100</b>Disponíveis</div>
-<div class="stat"><b id="reserved">0</b>Reservados</div>
-<div class="stat"><b>R$ 10,00</b>Por número</div>
-</div>
-</div>
-
-<div class="card">
-<h2>🎟️ Escolha seus números</h2>
-<p class="small">🟢 Disponível &nbsp; 💜 Selecionado &nbsp; 🔒 Já reservado</p>
+<h2 class="section-title">🎟️ Escolha seus números</h2>
+<p class="section-sub">Selecione um ou mais números para participar.</p>
+<div class="legend"><span class="l-available">🟢 Disponível</span><span class="l-selected">💜 Selecionado</span><span class="l-busy">🔒 Já reservado</span></div>
 <div id="grid" class="grid"></div>
 <div id="summary" class="summary">Nenhum número selecionado.</div>
 </div>
 
 <div class="card">
-<h2>👤 Seus dados</h2>
-<input id="name" class="input" placeholder="Seu nome completo">
-<input id="phone" class="input" placeholder="Seu WhatsApp" inputmode="tel">
-<input id="email" class="input" placeholder="Seu e-mail" type="email">
+<h2 class="section-title">👤 Seus dados</h2>
+<p class="section-sub">Preencha seus dados para gerar o Pix e finalizar sua reserva.</p>
+<div class="form-grid">
+<div class="field"><label>Nome completo</label><input id="name" class="input" placeholder="Digite seu nome"></div>
+<div class="field"><label>WhatsApp</label><input id="phone" class="input" placeholder="(00) 00000-0000" inputmode="tel"></div>
+<div class="field full"><label>E-mail</label><input id="email" class="input" placeholder="voce@email.com" type="email"></div>
+</div>
 <button class="btn" onclick="generatePix()">💳 Gerar Pix</button>
 <div id="dataMsg"></div>
 </div>
 
 <div id="pixCard" class="card pix">
-<h2>💜 Pague com Pix</h2>
-<div id="amount" class="center"></div>
-<p class="small">Após realizar o pagamento, sua reserva será confirmada automaticamente no sistema.</p>
+<div class="pix-head"><h2>💜 Pagamento via Pix</h2><div id="amount" class="total"></div></div>
+<div class="pix-area">
 <img id="qr" class="qr" alt="QR Code Pix">
+<div>
+<p><b>📋 Pix Copia e Cola</b></p>
 <div id="code" class="code"></div>
-<button class="btn" onclick="copyPix()">📋 Copiar código</button>
+<button class="btn copy" onclick="copyPix()">Copiar código Pix</button>
+<div class="notice">Após o pagamento, sua reserva será registrada no sistema. Guarde o código da sua reserva. 💜</div>
+</div>
+</div>
 <button class="btn" onclick="reserve()">✅ Confirmar minha reserva</button>
 <div id="reserveMsg"></div>
 </div>
+
+<div class="footer">Radicais Kids | Juvenil • Encontro com Deus<br>Uma semente investida na próxima geração. 🌱❤️‍🔥</div>
 </div>
 
 <script>
@@ -76,32 +155,33 @@ function toggle(n,b){
   if(selected.includes(n)){selected=selected.filter(x=>x!==n);b.classList.remove("sel")}
   else{selected.push(n);selected.sort((a,b)=>a-b);b.classList.add("sel")}
   $("summary").innerHTML=selected.length
-    ? "<b>Números:</b> "+selected.map(n=>String(n).padStart(2,"0")).join(", ")+"<br><b>Total:</b> R$ "+money(selected.length*raffle.price)
+    ? "<b>Seus números:</b> "+selected.map(n=>String(n).padStart(2,"0")).join(", ")+"<br><b>Total:</b> R$ "+money(selected.length*raffle.price)
     : "Nenhum número selecionado.";
 }
 async function generatePix(){
-  const m=$("dataMsg");
+  const m=$("dataMsg");m.className="msg";
   if(!selected.length){m.className="msg err";m.textContent="Selecione pelo menos um número.";return}
   if(!$("name").value.trim()||!$("phone").value.trim()||!$("email").value.trim()){m.className="msg err";m.textContent="Preencha nome, WhatsApp e e-mail.";return}
   try{
     const r=await fetch("/api/pix?numbers="+selected.join(",")),d=await r.json();
     if(!r.ok)throw Error(d.error);
-    pixCode=d.pix;$("amount").innerHTML="<b>Valor total: R$ "+money(d.amount)+"</b>";
+    pixCode=d.pix;$("amount").textContent="Valor total: R$ "+money(d.amount);
     $("qr").src=d.qr;$("code").textContent=d.pix;$("pixCard").style.display="block";
     $("pixCard").scrollIntoView({behavior:"smooth"});
   }catch(e){m.className="msg err";m.textContent=e.message}
 }
 async function copyPix(){
-  try{await navigator.clipboard.writeText(pixCode);alert("Pix Copia e Cola copiado!")}catch(e){alert("Não foi possível copiar automaticamente.")}
+  try{await navigator.clipboard.writeText(pixCode);alert("Pix Copia e Cola copiado! 💜")}
+  catch(e){alert("Não foi possível copiar automaticamente.")}
 }
 async function reserve(){
-  const m=$("reserveMsg");
+  const m=$("reserveMsg");m.className="msg";
   try{
     const r=await fetch("/api/reservar",{method:"POST",headers:{"Content-Type":"application/json"},
       body:JSON.stringify({name:$("name").value.trim(),phone:$("phone").value.trim(),email:$("email").value.trim(),numbers:selected})});
     const d=await r.json();if(!r.ok)throw Error(d.error);
     m.className="msg ok";
-    m.innerHTML="<b>🎉 Reserva confirmada!</b><br>Seu código: <b>"+d.reserva.id+"</b><br>Números: <b>"+d.reserva.numbers.join(", ")+"</b><br>Valor: <b>R$ "+money(d.reserva.amount)+"</b><br><br>Obrigado por fazer parte desse propósito! ❤️‍🔥";
+    m.innerHTML="<b>🎉 Reserva realizada com sucesso!</b><br>Código: <b>"+d.reserva.id+"</b><br>Números: <b>"+d.reserva.numbers.join(", ")+"</b><br>Valor: <b>R$ "+money(d.reserva.amount)+"</b><br><br>Obrigado por semear na próxima geração! ❤️‍🔥";
     selected.forEach(n=>sold.add(n));selected=[];draw();
   }catch(e){m.className="msg err";m.textContent=e.message}
 }
