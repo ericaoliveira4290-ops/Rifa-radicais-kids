@@ -10,7 +10,7 @@ const DB = path.join(__dirname, "rifa.json");
 
 const INITIAL = {
   title: "Rifa Radicais Kids | Juvenil - Encontro com Deus",
-  prize: "R$ 200,00",
+  prize: "R$ 100,00",
   quantity: 100,
   price: 10,
   responsible: "Fernanda Maria Alves de Souza",
