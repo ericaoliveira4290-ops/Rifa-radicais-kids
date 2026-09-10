@@ -1,6 +1,6 @@
 const express = require("express");
 const fs = require("fs");
-
+const path = require("path");
 const app = express();
 const PORT = process.env.PORT || 10000;
 
@@ -31,7 +31,9 @@ function salvar(dados) {
 }
 
 app.use(express.json());
-
+app.get("/imagem-rifa", (req, res) => {
+  res.sendFile(path.join(__dirname, "IMG-20260909-WA0152.jpg"));
+});
 app.get("/", (req, res) => {
   res.send(`
 <!DOCTYPE html>
@@ -123,6 +125,7 @@ button {
 <body>
 
 <header>
+<img src="/imagem-rifa" alt="Encontro com Deus - Radicais Kids" style="width:100%;max-width:600px;border-radius:20px;">
 <h1>☀️ Rifa Encontro Com Deus - Radicais Kids | Juvenis</h1>
 </header>
 
