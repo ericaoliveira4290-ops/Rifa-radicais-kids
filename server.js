@@ -164,3 +164,41 @@ app.post("/api/reservar",async(req,res)=>{
 });
 
 app.listen(PORT,"0.0.0.0",()=>console.log("Rifa Radicais Kids online na porta "+PORT));
+
+function adminAuthorized(req) {
+  const password = process.env.ADMIN_PASSWORD;
+  if (!password) return false;
+  const header = String(req.headers.authorization || "");
+  if (!header.startsWith("Basic ")) return false;
+  let decoded = "";
+  try { decoded = Buffer.from(header.slice(6), "base64").toString("utf8"); } catch { return false; }
+  const sep = decoded.indexOf(":");
+  if (sep < 0) return false;
+  return decoded.slice(sep + 1) === password;
+}
+function requireAdmin(req,res,next) {
+  if (!process.env.ADMIN_PASSWORD) return res.status(503).send("Área do organizador indisponível: configure ADMIN_PASSWORD no Render.");
+  if (!adminAuthorized(req)) {
+    res.set("WWW-Authenticate", 'Basic realm="Rifa Radicais Kids - Organizador"');
+    return res.status(401).send("Acesso restrito ao organizador.");
+  }
+  next();
+}
+
+app.get("/admin", requireAdmin, (req,res)=>{
+  const d=load();
+  const rs=reservations();
+  const sold=Object.keys(d.reservations||{}).map(Number).length;
+  const pct=Math.round((sold/d.quantity)*100);
+  const total=rs.reduce((sum,r)=>sum+Number(r.amount||0),0);
+  const rows=rs.map(r=>`<tr><td>${esc(r.name)}</td><td>${esc(r.phone)}</td><td>${esc(r.email)}</td><td>${esc(r.numbers.join(", "))}</td><td>R$ ${money(r.amount)}</td><td>${esc(r.status)}</td><td>${new Date(r.createdAt).toLocaleString("pt-BR")}</td></tr>`).join("");
+  res.send(`<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Organizador | Rifa Radicais Kids</title><link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800;900&display=swap" rel="stylesheet"><style>body{margin:0;font-family:Montserrat,Arial;background:#faf7ff;color:#2f2440}.wrap{max-width:1100px;margin:auto;padding:28px 18px}.top{background:linear-gradient(135deg,#7546b8,#e95d9f);color:#fff;border-radius:24px;padding:25px}.top h1{margin:0 0 6px;font-size:28px}.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:18px 0}.card{background:#fff;border:1px solid #eadff4;border-radius:18px;padding:18px}.card b{display:block;font-size:27px;color:#7546b8}.progress{height:14px;background:#eee9f2;border-radius:99px;overflow:hidden}.fill{height:100%;width:${Math.min(pct,100)}%;background:linear-gradient(90deg,#e95d9f,#7546b8,#718d45,#3e91cf,#f1bd35)}.actions{display:flex;gap:10px;margin:16px 0;flex-wrap:wrap}.btn{display:inline-block;padding:12px 16px;border-radius:12px;text-decoration:none;font-weight:800;background:#7546b8;color:#fff}.btn.green{background:#718d45}.table{overflow:auto;background:#fff;border:1px solid #eadff4;border-radius:18px}table{width:100%;border-collapse:collapse;min-width:900px}th,td{padding:11px;border-bottom:1px solid #eee;text-align:left;font-size:12px}th{background:#f6f0fb;color:#7546b8} .meta{font-size:13px;color:#6c5c78;margin-top:8px}@media(max-width:700px){.cards{grid-template-columns:repeat(2,1fr)}} </style></head><body><div class="wrap"><div class="top"><h1>Rifa Radicais Kids | Área do Organizador</h1><div>❤️ 💜 💚 💙 💛 Acompanhamento das reservas</div></div><div class="cards"><div class="card"><b>${sold}</b>Números vendidos</div><div class="card"><b>${d.quantity-sold}</b>Disponíveis</div><div class="card"><b>${pct}%</b>Progresso</div><div class="card"><b>R$ ${money(total)}</b>Total reservado</div></div><div class="card"><strong>Meta para o sorteio: 70%</strong><div class="progress"><div class="fill"></div></div><div class="meta">${pct>=70?"Meta atingida — sorteio liberado!":"Faltam "+Math.max(0,70-sold)+" números para atingir a meta."}</div></div><div class="actions"><a class="btn green" href="/admin.csv">Baixar lista em CSV</a><a class="btn" href="/">Voltar para a rifa</a></div><div class="table"><table><thead><tr><th>Nome</th><th>WhatsApp</th><th>E-mail</th><th>Números</th><th>Valor</th><th>Status</th><th>Data</th></tr></thead><tbody>${rows || '<tr><td colspan="7">Nenhuma reserva registrada.</td></tr>'}</tbody></table></div></div></body></html>`);
+});
+
+app.get("/admin.csv", requireAdmin, (req,res)=>{
+  const rows=reservations();
+  const lines=[["Nome","WhatsApp","E-mail","Números","Valor","Status","Data"],...rows.map(r=>[r.name,r.phone,r.email,r.numbers.join(" | "),Number(r.amount).toFixed(2).replace(".",","),r.status,new Date(r.createdAt).toLocaleString("pt-BR")])];
+  const csv="\\ufeff"+lines.map(row=>row.map(v=>'"'+String(v??"").replace(/"/g,'""')+'"').join(";")).join("\\r\\n");
+  res.set({"Content-Type":"text/csv; charset=utf-8","Content-Disposition":"attachment; filename=rifa-radicais-kids-reservas.csv"});
+  res.send(csv);
+});

@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#7440C7">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;900;800;900&display=swap" rel="stylesheet">
 <title>Rifa Radicais Kids | Juvenil — Encontro com Deus</title>
 <style>
 :root{--purple:#7440c7;--purple-dark:#4b237f;--lilac:#a86df0;--pink:#ef83ca;--pink-soft:#ffe5f5;--blue:#62d2e8;--blue-soft:#e9fbff;--yellow:#ffd85c;--green:#2bbd9b;--green-soft:#e3f8f1;--ink:#39264f;--muted:#786987;--white:#fff;--gray:#d9d5de}
@@ -20,24 +20,24 @@ body:after{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;back
 .top{padding:30px 10px 22px;text-align:center}
 .kicker{display:inline-block;padding:8px 18px;border-radius:999px;background:#fff;border:2px solid rgba(255,255,255,.9);box-shadow:0 10px 28px rgba(71,33,112,.12);font-weight:800;color:var(--purple);font-size:13px;letter-spacing:.8px}
 h1{margin:16px 0 7px;font-size:clamp(31px,6vw,58px);line-height:1;font-weight:900;letter-spacing:-2px;color:var(--purple-dark);text-transform:uppercase}
-.subtitle{font-size:clamp(14px,2.5vw,19px);font-weight:700;color:#6c5680}
+.subtitle{font-size:clamp(14px,2.5vw,19px);font-weight:900;color:#6c5680}
 .card{background:rgba(255,255,255,.96);border:1px solid rgba(255,255,255,.95);border-radius:30px;padding:25px;margin:18px 0;box-shadow:0 20px 55px rgba(73,42,105,.12)}
 .hero-card{padding:13px;overflow:hidden}
 .hero{display:block;width:100%;height:auto;max-height:650px;object-fit:contain;border-radius:22px;background:#f7f1ff}
 .purpose{position:relative;text-align:center;background:linear-gradient(135deg,#fff 0,#fff5fb 52%,#f3efff 100%);border:2px solid #f4d8eb;overflow:hidden}
-.purpose:before{content:"";position:absolute;width:170px;height:170px;border-radius:50%;background:rgba(98,210,232,.14);top:-85px;left:-65px}.purpose:after{content:"";position:absolute;width:150px;height:150px;border-radius:50%;background:rgba(239,131,202,.13);bottom:-85px;right:-55px}
+.purpose:before{content:"";position:absolute;width:190px;height:190px;border-radius:50%;background:rgba(98,210,232,.14);top:-85px;left:-65px}.purpose:after{content:"";position:absolute;width:150px;height:150px;border-radius:50%;background:rgba(239,131,202,.13);bottom:-85px;right:-55px}
 .purpose>*{position:relative;z-index:1}.purpose h2{margin:0 0 13px;color:var(--purple);font-size:clamp(22px,4vw,30px)}
 .purpose p{max-width:780px;margin:9px auto;line-height:1.65;font-size:16px}.purpose strong{color:var(--purple-dark)}
 .purpose .closing{display:inline-block;margin-top:12px;padding:11px 18px;border-radius:999px;background:linear-gradient(90deg,var(--pink-soft),#eee4ff);color:var(--purple-dark);font-weight:900}
 .prize{background:linear-gradient(90deg,var(--purple),var(--lilac),var(--pink));color:white;border-radius:20px;padding:17px 20px;text-align:center;font-size:clamp(18px,3vw,23px);font-weight:900;box-shadow:0 9px 24px rgba(116,64,199,.22)}
-.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:13px}.stat{text-align:center;padding:19px 10px;border-radius:21px;background:#fbf9ff;border:1px solid #e9def8}.stat b{display:block;font-size:28px;color:var(--purple);margin-bottom:5px}.stat span{font-size:13px;font-weight:700;color:var(--muted)}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:13px}.stat{text-align:center;padding:19px 10px;border-radius:21px;background:#fbf9ff;border:1px solid #e9def8}.stat b{display:block;font-size:28px;color:var(--purple);margin-bottom:5px}.stat span{font-size:13px;font-weight:900;color:var(--muted)}
 .section-title{margin:0;color:var(--purple-dark);font-size:25px}.section-sub{margin:7px 0 17px;color:var(--muted);font-size:14px}
 .legend{display:flex;gap:9px;flex-wrap:wrap;margin-bottom:15px}.legend span{font-size:12px;font-weight:800;padding:7px 11px;border-radius:999px}.available{background:var(--green-soft);color:#1e765f}.selected{background:#eadcff;color:var(--purple)}.busy{background:#e5e4e7;color:#777}
 .grid{display:grid;grid-template-columns:repeat(10,1fr);gap:7px}.num{border:0;border-radius:10px;padding:11px 2px;background:var(--green-soft);color:#16765e;font-family:inherit;font-weight:900;cursor:pointer;transition:.15s;box-shadow:inset 0 0 0 1px #d0efe4}.num:hover{transform:translateY(-2px);box-shadow:0 5px 13px rgba(43,189,155,.16)}.num.sel{background:var(--purple);color:#fff;box-shadow:0 6px 14px rgba(116,64,199,.28)}.num.busy{background:#d5d4d8;color:#fff;cursor:not-allowed;box-shadow:none}
 .summary{margin-top:15px;padding:15px;border-radius:17px;background:#f7f1ff;border:1px solid #e6d9f7;line-height:1.55;font-size:14px}
 .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.field.full{grid-column:1/-1}.field label{display:block;margin:0 0 6px;font-size:12px;font-weight:800;color:#5e4c6c}.input{width:100%;border:2px solid #e7ddf3;border-radius:15px;padding:14px 15px;font-family:inherit;font-size:15px;color:var(--ink);outline:0;background:#fff}.input:focus{border-color:var(--lilac);box-shadow:0 0 0 4px rgba(168,109,240,.12)}
 .btn{width:100%;border:0;border-radius:15px;padding:15px 18px;margin-top:6px;font-family:inherit;font-size:15px;font-weight:900;color:#fff;background:linear-gradient(90deg,var(--purple),var(--lilac));box-shadow:0 5px 0 #542a8e;cursor:pointer;transition:.12s}.btn:hover{filter:brightness(1.04)}.btn:active{transform:translateY(2px);box-shadow:0 3px 0 #542a8e}.btn:disabled{opacity:.6;cursor:not-allowed}
-.msg{margin-top:11px;padding:13px;border-radius:14px;text-align:center;font-size:13px;font-weight:700}.ok{background:var(--green-soft);color:#176d55}.err{background:#ffe8ee;color:#a42f4a}
+.msg{margin-top:11px;padding:13px;border-radius:14px;text-align:center;font-size:13px;font-weight:900}.ok{background:var(--green-soft);color:#176d55}.err{background:#ffe8ee;color:#a42f4a}
 .pix{display:none;border:2px solid #e9d9fa}.pix-head{text-align:center}.pix-head h2{margin:0;color:var(--purple-dark);font-size:25px}.total{font-size:22px;font-weight:900;color:var(--purple);margin:8px 0 18px}.pix-area{display:grid;grid-template-columns:280px 1fr;gap:24px;align-items:center}.qr{display:block;width:255px;max-width:100%;margin:auto;padding:10px;background:#fff;border-radius:18px;border:1px solid #eee;box-shadow:0 10px 25px rgba(50,30,80,.08)}.code{max-height:155px;overflow:auto;word-break:break-all;background:#faf8fc;border:1px solid #e6e0eb;border-radius:13px;padding:12px;font-size:11px;line-height:1.45}.copy{background:var(--green);box-shadow:0 5px 0 #21866f}.notice{margin-top:12px;padding:12px 13px;border-radius:14px;background:#f4efff;border:1px solid #e2d5f5;font-size:12px;line-height:1.5;color:#5e4d6d}
 .footer{text-align:center;color:var(--muted);font-size:12px;line-height:1.6;margin-top:20px}.footer b{color:var(--purple)}
 @media(max-width:760px){.grid{grid-template-columns:repeat(5,1fr)}.pix-area{grid-template-columns:1fr}.qr{width:240px}.card{padding:20px}}
@@ -72,7 +72,7 @@ h1{margin:16px 0 7px;font-size:clamp(31px,6vw,58px);line-height:1;font-weight:90
 <div class="draw-notice">
   <div class="draw-hearts">❤️ 💜 💚 💙 💛</div>
   <strong>SORTEIO</strong>
-  <p>O sorteio será realizado após a venda de <b>70% dos números da rifa</b>.</p>
+  <p>O sorteio será realizado após a venda de <b>90% dos números da rifa</b>.</p>
 </div>
 
 <section class="card">
