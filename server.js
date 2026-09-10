@@ -936,11 +936,10 @@ function atualizarSelecionados() {
     selecionados.length * Number(rifa.price);
 
   area.innerHTML =
-    `<strong>Números:</strong>
-     ${selecionados.map(n => String(n).padStart(2,"0")).join(", ")}
-     <br>
-     <strong>Total:</strong>
-     R$ ${valor.toFixed(2).replace(".", ",")}`;
+  "<strong>Números:</strong> " +
+  selecionados.map(n => String(n).padStart(2, "0")).join(", ") +
+  "<br><strong>Total:</strong> R$ " +
+  valor.toFixed(2).replace(".", ",");
 
 }
 
@@ -1106,19 +1105,7 @@ async function confirmarReserva() {
 
     mensagem.className =
       "mensagem sucesso";
-
-    mensagem.innerHTML = `
-      <strong>Reserva realizada com sucesso! 🎉</strong><br><br>
-      Código da reserva:
-      <strong>${dados.reserva.id}</strong><br>
-      Números:
-      <strong>${dados.reserva.numbers.join(", ")}</strong><br>
-      Valor:
-      <strong>
-        R$ ${Number(dados.reserva.amount)
-          .toFixed(2)
-          .replace(".", ",")}
-      </strong>
+    
     `;
 
     document.getElementById("comprovante").style.display =
