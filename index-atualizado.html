@@ -6,13 +6,13 @@
 <meta name="theme-color" content="#7440C7">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;900;800;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <title>Rifa Radicais Kids | Juvenil — Encontro com Deus</title>
 <style>
 :root{--purple:#7440c7;--purple-dark:#4b237f;--lilac:#a86df0;--pink:#ef83ca;--pink-soft:#ffe5f5;--blue:#62d2e8;--blue-soft:#e9fbff;--yellow:#ffd85c;--green:#2bbd9b;--green-soft:#e3f8f1;--ink:#39264f;--muted:#786987;--white:#fff;--gray:#d9d5de}
-*{box-sizing:border-box}
+*{box-sizing:border-box;font-family:"Montserrat",sans-serif!important}
 html{scroll-behavior:smooth}
-body{margin:0;font-family:Montserrat,Arial,sans-serif;color:var(--ink);min-height:100vh;background:linear-gradient(180deg,#dff8ff 0,#f3f0ff 48%,#fff1fa 100%);overflow-x:hidden;position:relative}
+body{margin:0;font-family:"Montserrat",sans-serif;color:var(--ink);min-height:100vh;background:linear-gradient(180deg,#dff8ff 0,#f3f0ff 48%,#fff1fa 100%);overflow-x:hidden;position:relative}
 /* Fundo decorativo inspirado na identidade Radicais Kids, sem usar outra imagem */
 body:before{content:"RADICAIS KIDS   JUVENIL   ENCONTRO COM DEUS   RADICAIS KIDS   JUVENIL   ENCONTRO COM DEUS";position:fixed;inset:-15%;z-index:-2;display:block;font-size:clamp(38px,7vw,90px);font-weight:900;line-height:1.8;letter-spacing:4px;color:rgba(116,64,199,.045);transform:rotate(-12deg);word-spacing:20px}
 body:after{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;background:radial-gradient(circle at 5% 10%,rgba(255,255,255,.95) 0 9px,transparent 10px),radial-gradient(circle at 94% 15%,rgba(239,131,202,.20) 0 22px,transparent 23px),radial-gradient(circle at 12% 72%,rgba(98,210,232,.18) 0 30px,transparent 31px),radial-gradient(circle at 88% 78%,rgba(255,216,92,.18) 0 20px,transparent 21px);background-size:180px 180px,280px 280px,360px 360px,420px 420px}
@@ -30,7 +30,7 @@ h1{margin:16px 0 7px;font-size:clamp(31px,6vw,58px);line-height:1;font-weight:90
 .purpose p{max-width:780px;margin:9px auto;line-height:1.65;font-size:16px}.purpose strong{color:var(--purple-dark)}
 .purpose .closing{display:inline-block;margin-top:12px;padding:11px 18px;border-radius:999px;background:linear-gradient(90deg,var(--pink-soft),#eee4ff);color:var(--purple-dark);font-weight:900}
 .prize{background:linear-gradient(90deg,var(--purple),var(--lilac),var(--pink));color:white;border-radius:20px;padding:17px 20px;text-align:center;font-size:clamp(18px,3vw,23px);font-weight:900;box-shadow:0 9px 24px rgba(116,64,199,.22)}
-.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:13px}.stat{text-align:center;padding:19px 10px;border-radius:21px;background:#fbf9ff;border:1px solid #e9def8}.stat b{display:block;font-size:28px;color:var(--purple);margin-bottom:5px}.stat span{font-size:13px;font-weight:900;color:var(--muted)}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:13px}.progress-box{margin:18px 0 4px;padding:18px 18px 16px;border-radius:20px;background:linear-gradient(135deg,#fff8fc,#f6f2ff);border:1px solid #eadcf5}.progress-head{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-bottom:9px}.progress-head strong{font-size:14px;color:var(--purple)}.progress-head span{font-size:18px;font-weight:900;color:var(--purple)}.progress-track{height:14px;background:#eee9f2;border-radius:99px;overflow:hidden}.progress-fill{height:100%;width:0%;border-radius:99px;background:linear-gradient(90deg,#f28bb8,#7650c7,#7f9b52,#5ba7d9,#f0c84b);transition:width .4s ease}.progress-note{text-align:center;margin:9px 0 0;font-size:12px;font-weight:900;color:#666}.draw-ready{display:none;margin-top:10px;padding:10px 12px;border-radius:12px;background:#eaf4df;color:#536b35;font-weight:900;text-align:center}.draw-ready.show{display:block}.stat{text-align:center;padding:19px 10px;border-radius:21px;background:#fbf9ff;border:1px solid #e9def8}.stat b{display:block;font-size:28px;color:var(--purple);margin-bottom:5px}.stat span{font-size:13px;font-weight:900;color:var(--muted)}
 .section-title{margin:0;color:var(--purple-dark);font-size:25px}.section-sub{margin:7px 0 17px;color:var(--muted);font-size:14px}
 .legend{display:flex;gap:9px;flex-wrap:wrap;margin-bottom:15px}.legend span{font-size:12px;font-weight:800;padding:7px 11px;border-radius:999px}.available{background:var(--green-soft);color:#1e765f}.selected{background:#eadcff;color:var(--purple)}.busy{background:#e5e4e7;color:#777}
 .grid{display:grid;grid-template-columns:repeat(10,1fr);gap:7px}.num{border:0;border-radius:10px;padding:11px 2px;background:var(--green-soft);color:#16765e;font-family:inherit;font-weight:900;cursor:pointer;transition:.15s;box-shadow:inset 0 0 0 1px #d0efe4}.num:hover{transform:translateY(-2px);box-shadow:0 5px 13px rgba(43,189,155,.16)}.num.sel{background:var(--purple);color:#fff;box-shadow:0 6px 14px rgba(116,64,199,.28)}.num.busy{background:#d5d4d8;color:#fff;cursor:not-allowed;box-shadow:none}
@@ -38,14 +38,14 @@ h1{margin:16px 0 7px;font-size:clamp(31px,6vw,58px);line-height:1;font-weight:90
 .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.field.full{grid-column:1/-1}.field label{display:block;margin:0 0 6px;font-size:12px;font-weight:800;color:#5e4c6c}.input{width:100%;border:2px solid #e7ddf3;border-radius:15px;padding:14px 15px;font-family:inherit;font-size:15px;color:var(--ink);outline:0;background:#fff}.input:focus{border-color:var(--lilac);box-shadow:0 0 0 4px rgba(168,109,240,.12)}
 .btn{width:100%;border:0;border-radius:15px;padding:15px 18px;margin-top:6px;font-family:inherit;font-size:15px;font-weight:900;color:#fff;background:linear-gradient(90deg,var(--purple),var(--lilac));box-shadow:0 5px 0 #542a8e;cursor:pointer;transition:.12s}.btn:hover{filter:brightness(1.04)}.btn:active{transform:translateY(2px);box-shadow:0 3px 0 #542a8e}.btn:disabled{opacity:.6;cursor:not-allowed}
 .msg{margin-top:11px;padding:13px;border-radius:14px;text-align:center;font-size:13px;font-weight:900}.ok{background:var(--green-soft);color:#176d55}.err{background:#ffe8ee;color:#a42f4a}
-.pix{display:none;border:2px solid #e9d9fa}.pix-head{text-align:center}.pix-head h2{margin:0;color:var(--purple-dark);font-size:25px}.total{font-size:22px;font-weight:900;color:var(--purple);margin:8px 0 18px}.pix-area{display:grid;grid-template-columns:280px 1fr;gap:24px;align-items:center}.qr{display:block;width:255px;max-width:100%;margin:auto;padding:10px;background:#fff;border-radius:18px;border:1px solid #eee;box-shadow:0 10px 25px rgba(50,30,80,.08)}.code{max-height:155px;overflow:auto;word-break:break-all;background:#faf8fc;border:1px solid #e6e0eb;border-radius:13px;padding:12px;font-size:11px;line-height:1.45}.copy{background:var(--green);box-shadow:0 5px 0 #21866f}.notice{margin-top:12px;padding:12px 13px;border-radius:14px;background:#f4efff;border:1px solid #e2d5f5;font-size:12px;line-height:1.5;color:#5e4d6d}
+.pix{display:none;border:2px solid #e9d9fa}.pix-head{text-align:center}.pix-head h2{margin:0;color:var(--purple-dark);font-size:25px}.total{font-size:22px;font-weight:900;color:var(--purple);margin:8px 0 18px}.pix-area{display:grid;grid-template-columns:280px 1fr;gap:24px;align-items:center}.qr{display:block;width:255px;max-width:100%;margin:auto;padding:10px;background:#fff;border-radius:18px;border:1px solid #eee;box-shadow:0 10px 25px rgba(50,30,80,.08)}.code{max-height:155px;overflow:auto;word-break:break-all;background:#faf8fc;border:1px solid #e6e0eb;border-radius:13px;padding:12px;font-size:11px;line-height:1.45}.copy{background:var(--green);box-shadow:0 5px 0 #21866f}.whatsapp{background:#25D366;box-shadow:0 5px 0 #159447;margin-top:10px}.notice{margin-top:12px;padding:12px 13px;border-radius:14px;background:#f4efff;border:1px solid #e2d5f5;font-size:12px;line-height:1.5;color:#5e4d6d}
 .footer{text-align:center;color:var(--muted);font-size:12px;line-height:1.6;margin-top:20px}.footer b{color:var(--purple)}
 @media(max-width:760px){.grid{grid-template-columns:repeat(5,1fr)}.pix-area{grid-template-columns:1fr}.qr{width:240px}.card{padding:20px}}
 @media(max-width:520px){.wrap{width:96%}.top{padding-top:20px}.kicker{font-size:11px;padding:7px 14px}h1{font-size:35px;letter-spacing:-1px}.card{border-radius:22px;padding:17px}.stats{grid-template-columns:1fr}.form-grid{grid-template-columns:1fr}.field.full{grid-column:auto}.num{font-size:12px;padding:10px 1px}.purpose p{font-size:14px}.prize{border-radius:17px}}
 50%{transform:translateY(-4px) rotate(3deg)}}
 .heart-strip{display:flex;justify-content:center;gap:16px;align-items:center;padding:10px 0 4px}.heart{font-size:25px;line-height:1;filter:drop-shadow(0 3px 4px rgba(60,35,90,.14));animation:floatHeart 3.5s ease-in-out infinite}.heart:nth-child(2n){animation-delay:.35s}.heart:nth-child(3n){animation-delay:.7s}.pink{color:#e95d9f}.purple{color:#7546b8}.olive{color:#718d45}.blue{color:#3e91cf}.yellow{color:#f1bd35}@keyframes floatHeart{0%,100%{transform:translateY(0) rotate(-3deg)}50%{transform:translateY(-4px) rotate(3deg)}}
 .draw-notice{margin:18px 0;padding:20px;border-radius:22px;text-align:center;background:linear-gradient(135deg,#fff7fb,#f7f3ff,#f5fbf7);border:2px solid #e6d8f5;box-shadow:0 8px 24px rgba(91,57,125,.08)}.draw-notice strong{display:block;color:var(--purple);font-size:19px;letter-spacing:.8px;margin:5px 0 7px}.draw-notice p{margin:0;color:#4e4657;font-size:14px;line-height:1.55}.draw-hearts{font-size:22px;letter-spacing:4px;margin-bottom:4px}
-*{font-family:"Montserrat",Arial,sans-serif;}
+*{font-family:"Montserrat",sans-serif!important;}
 </style>
 </head>
 <body>
@@ -73,10 +73,12 @@ h1{margin:16px 0 7px;font-size:clamp(31px,6vw,58px);line-height:1;font-weight:90
 <div class="draw-notice">
   <div class="draw-hearts">❤️ 💜 💚 💙 💛</div>
   <strong>SORTEIO</strong>
-  <p>O sorteio será realizado após a venda de <b>90% dos números da rifa</b>.</p>
+  <p>O sorteio será realizado após a venda de <b>70% dos números da rifa</b>.</p>
 </div>
 
 <section class="card">
+  <div class="progress-box"><div class="progress-head"><strong>Progresso das vendas</strong><span id="salePercent">0%</span></div><div class="progress-track"><div class="progress-fill" id="saleFill"></div></div><p class="progress-note">Meta para realizar o sorteio: <b>70% dos números vendidos</b></p><div class="draw-ready" id="drawReady">70% dos números vendidos — sorteio liberado!</div></div>
+
   <div class="stats">
     <div class="stat"><b id="available">100</b><span>Números disponíveis</span></div>
     <div class="stat"><b id="reserved">0</b><span>Números reservados</span></div>
@@ -94,13 +96,13 @@ h1{margin:16px 0 7px;font-size:clamp(31px,6vw,58px);line-height:1;font-weight:90
 
 <section class="card">
   <h2 class="section-title">Seus dados</h2>
-  <p class="section-sub">Informe seus dados para gerar o Pix e finalizar sua reserva.</p>
+  <p class="section-sub">Informe seus dados para reservar seus números e gerar o Pix.</p>
   <div class="form-grid">
     <div class="field"><label for="name">Nome completo</label><input id="name" class="input" placeholder="Digite seu nome" autocomplete="name"></div>
     <div class="field"><label for="phone">WhatsApp</label><input id="phone" class="input" placeholder="(00) 00000-0000" inputmode="tel" autocomplete="tel"></div>
     <div class="field full"><label for="email">E-mail</label><input id="email" class="input" placeholder="voce@email.com" type="email" autocomplete="email"></div>
   </div>
-  <button id="generateBtn" class="btn" onclick="generatePix()">Gerar Pix</button>
+  <button id="generateBtn" class="btn" onclick="reserve()">Reservar números e gerar Pix</button>
   <div id="dataMsg"></div>
 </section>
 
@@ -112,10 +114,11 @@ h1{margin:16px 0 7px;font-size:clamp(31px,6vw,58px);line-height:1;font-weight:90
       <p><strong>Pix Copia e Cola</strong></p>
       <div id="code" class="code"></div>
       <button class="btn copy" onclick="copyPix()">Copiar código Pix</button>
-      <div class="notice">A confirmação da sua reserva acontece automaticamente após a finalização.</div>
+      <button id="whatsappBtn" class="btn whatsapp" type="button" onclick="sendProofWhatsApp()">Enviar comprovante pelo WhatsApp</button>
+      <div class="notice">Sua reserva foi registrada automaticamente. O sistema registra a reserva, mas não confirma o pagamento bancário. Após realizar o Pix, você pode enviar o comprovante pelo WhatsApp.</div>
     </div>
   </div>
-  <button id="reserveBtn" class="btn" onclick="reserve()">Finalizar minha reserva</button>
+  
   <div id="reserveMsg"></div>
 </section>
 
@@ -123,16 +126,23 @@ h1{margin:16px 0 7px;font-size:clamp(31px,6vw,58px);line-height:1;font-weight:90
 </div>
 
 <script>
-let raffle=null,selected=[],sold=new Set(),pixCode="";
+let raffle=null,selected=[],sold=new Set(),pixCode="",lastReservation=null;
 const $=id=>document.getElementById(id);
 const money=v=>Number(v).toFixed(2).replace('.',',');
-async function load(){try{const r=await fetch('/api/rifa');raffle=await r.json();sold=new Set(raffle.sold||[]);draw();}catch(e){$('dataMsg').className='msg err';$('dataMsg').textContent='Não foi possível carregar os números. Atualize a página.'}}
-function draw(){const g=$('grid');g.innerHTML='';for(let i=1;i<=raffle.quantity;i++){const b=document.createElement('button');b.type='button';b.className='num';b.textContent=String(i).padStart(2,'0');if(sold.has(i)){b.classList.add('busy');b.disabled=true;b.title='Número já reservado';}else{if(selected.includes(i))b.classList.add('sel');b.onclick=()=>toggle(i,b)}g.appendChild(b)}$('reserved').textContent=sold.size;$('available').textContent=raffle.quantity-sold.size}
+async function load(silent=false){try{const r=await fetch('/api/rifa',{cache:'no-store'});const d=await r.json();if(!r.ok)throw Error(d.error||'Falha ao carregar');raffle=d;sold=new Set(raffle.sold||[]);selected=selected.filter(n=>!sold.has(n));draw();if(!selected.length)$('summary').textContent='Nenhum número selecionado.';}catch(e){if(!silent){$('dataMsg').className='msg err';$('dataMsg').textContent='Não foi possível carregar os números. Atualize a página.'}}}
+function draw(){const g=$('grid');g.innerHTML='';for(let i=1;i<=raffle.quantity;i++){const b=document.createElement('button');b.type='button';b.className='num';b.textContent=String(i).padStart(2,'0');if(sold.has(i)){b.classList.add('busy');b.disabled=true;b.title='Número já reservado';}else{if(selected.includes(i))b.classList.add('sel');b.onclick=()=>toggle(i,b)}g.appendChild(b)}$('reserved').textContent=sold.size;$('available').textContent=raffle.quantity-sold.size;const pct=Math.round((sold.size/raffle.quantity)*100);$('salePercent').textContent=pct+'%';$('saleFill').style.width=Math.min(pct,100)+'%';$('drawReady').classList.toggle('show',pct>=70)}
 function toggle(n,b){if(selected.includes(n)){selected=selected.filter(x=>x!==n);b.classList.remove('sel')}else{selected.push(n);selected.sort((a,b)=>a-b);b.classList.add('sel')}$('summary').innerHTML=selected.length?'<b>Seus números:</b> '+selected.map(n=>String(n).padStart(2,'0')).join(', ')+'<br><b>Total:</b> R$ '+money(selected.length*raffle.price):'Nenhum número selecionado.';if($('pixCard').style.display==='block')$('pixCard').style.display='none'}
-async function generatePix(){const m=$('dataMsg');m.className='msg';m.textContent='';if(!selected.length){m.className='msg err';m.textContent='Selecione pelo menos um número.';return}if(!$('name').value.trim()||!$('phone').value.trim()||!$('email').value.trim()){m.className='msg err';m.textContent='Preencha nome, WhatsApp e e-mail.';return}const btn=$('generateBtn');btn.disabled=true;btn.textContent='Gerando Pix...';try{const r=await fetch('/api/pix?numbers='+selected.join(','));const d=await r.json();if(!r.ok)throw Error(d.error);pixCode=d.pix;$('amount').textContent='Valor total: R$ '+money(d.amount);$('qr').src=d.qr;$('code').textContent=d.pix;$('pixCard').style.display='block';$('pixCard').scrollIntoView({behavior:'smooth',block:'center'});}catch(e){m.className='msg err';m.textContent=e.message||'Não foi possível gerar o Pix.'}finally{btn.disabled=false;btn.textContent='Gerar Pix'}}
 async function copyPix(){if(!pixCode)return;try{await navigator.clipboard.writeText(pixCode);const b=document.querySelector('.copy');const old=b.textContent;b.textContent='Código copiado';setTimeout(()=>b.textContent=old,1800)}catch(e){alert('Não foi possível copiar automaticamente. Selecione e copie o código.')}}
-async function reserve(){const m=$('reserveMsg');m.className='msg';m.textContent='';if(!pixCode){m.className='msg err';m.textContent='Gere o Pix antes de finalizar a reserva.';return}const btn=$('reserveBtn');btn.disabled=true;btn.textContent='Finalizando...';try{const r=await fetch('/api/reservar',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:$('name').value.trim(),phone:$('phone').value.trim(),email:$('email').value.trim(),numbers:selected})});const d=await r.json();if(!r.ok)throw Error(d.error);m.className='msg ok';m.innerHTML='<b>Reserva realizada com sucesso.</b><br>Números: <b>'+d.reserva.numbers.map(n=>String(n).padStart(2,'0')).join(', ')+'</b><br>Valor: <b>R$ '+money(d.reserva.amount)+'</b><br><br>Obrigado por semear na próxima geração.';selected.forEach(n=>sold.add(n));selected=[];pixCode='';draw();$('summary').textContent='Nenhum número selecionado.';$('pixCard').scrollIntoView({behavior:'smooth',block:'center'});}catch(e){m.className='msg err';m.textContent=e.message||'Não foi possível concluir a reserva.';await load()}finally{btn.disabled=false;btn.textContent='Finalizar minha reserva'}}
+function sendProofWhatsApp(){if(!lastReservation)return;const nums=lastReservation.numbers.map(n=>String(n).padStart(2,'0')).join(', ');const msg='Olá, Fernanda! Enviei o Pix da Rifa Radicais Kids.
+
+Nome: '+lastReservation.name+'
+Números: '+nums+'
+Valor: R$ '+money(lastReservation.amount)+'
+
+Estou enviando o comprovante de pagamento por aqui.';window.open('https://wa.me/5562996251975?text='+encodeURIComponent(msg),'_blank','noopener,noreferrer')}
+async function reserve(){const m=$('dataMsg');m.className='msg';m.textContent='';if(!selected.length){m.className='msg err';m.textContent='Selecione pelo menos um número.';return}if(!$('name').value.trim()||!$('phone').value.trim()||!$('email').value.trim()){m.className='msg err';m.textContent='Preencha nome, WhatsApp e e-mail.';return}const btn=$('generateBtn');btn.disabled=true;btn.textContent='Verificando números...';try{await load(true);const blocked=selected.filter(n=>sold.has(n));if(blocked.length){m.className='msg err';m.textContent='O número '+blocked.map(n=>String(n).padStart(2,'0')).join(', ')+' já foi reservado. Escolha outro número.';return}btn.textContent='Registrando reserva...';const r=await fetch('/api/reservar',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:$('name').value.trim(),phone:$('phone').value.trim(),email:$('email').value.trim(),numbers:selected})});const d=await r.json();if(!r.ok)throw Object.assign(new Error(d.error||'Não foi possível concluir a reserva.'),{status:r.status});pixCode=d.pix;lastReservation={name:$('name').value.trim(),numbers:d.reserva.numbers,amount:Number(d.reserva.amount)};$('amount').textContent='Valor total: R$ '+money(d.reserva.amount);$('qr').src=d.qr;$('code').textContent=d.pix;$('pixCard').style.display='block';m.className='msg ok';m.innerHTML='<b>Reserva realizada com sucesso.</b><br>Seus números: <b>'+d.reserva.numbers.map(n=>String(n).padStart(2,'0')).join(', ')+'</b><br>Valor: <b>R$ '+money(d.reserva.amount)+'</b>';selected.forEach(n=>sold.add(n));selected=[];draw();$('summary').textContent='Nenhum número selecionado.';$('pixCard').scrollIntoView({behavior:'smooth',block:'center'});}catch(e){m.className='msg err';m.textContent=e.message||'Não foi possível concluir a reserva.';await load(true)}finally{btn.disabled=false;btn.textContent='Reservar números e gerar Pix'}}
 load();
+setInterval(()=>{if(!document.hidden) load(true)},15000);
 </script>
 </body>
 </html>
