@@ -1,24 +1,111 @@
-<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Rifa Encontro Com Deus</title>
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Rifa Radicais Kids | Juvenil - Encontro com Deus</title>
 <style>
-body{margin:0;background:#f3f0ff;font-family:Arial;color:#222}.wrap{max-width:720px;width:94%;margin:18px auto 50px}.card{background:#fff;border-radius:18px;padding:18px;margin:14px 0;box-shadow:0 4px 18px #0001}.hero{width:100%;border-radius:18px}.grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}.num{padding:12px 3px;border:0;border-radius:10px;background:#dcf5e3;font-weight:bold}.sel{background:#8750d5!important;color:#fff}.busy{background:#aaa;color:#fff}.input{width:100%;padding:13px;margin:7px 0;border:1px solid #ccc;border-radius:10px;font-size:16px;box-sizing:border-box}.btn{width:100%;padding:14px;margin-top:10px;border:0;border-radius:11px;background:#8750d5;color:#fff;font-weight:bold;font-size:16px}.alt{background:#eee;color:#222}.summary,.msg{padding:12px;border-radius:10px;margin-top:10px}.summary{background:#f1edff}.ok{background:#e4f8e8;color:#176b2a}.err{background:#ffe5e5;color:#9b0000}.center{text-align:center}.qr{display:block;width:230px;max-width:80%;margin:12px auto}.code{background:#f3f3f3;padding:12px;border-radius:10px;word-break:break-all;font-size:12px}.pix,.proof{display:none}.small{font-size:13px;color:#666}
-</style></head><body><div class="wrap">
-<img class="hero" src="/imagem-rifa" alt="Rifa">
-<div class="card center"><h1>🎟️ Rifa Encontro Com Deus</h1><p><b>Prêmio:</b> R$ 200,00 no Pix</p><p><b>Valor:</b> R$ 10,00 por número</p><p><b>Sorteio:</b> 03/10/2026</p><p><b>Responsável:</b> Fernanda Maria Alves de Souza</p></div>
-<div class="card"><h2>Escolha seus números</h2><div id="grid" class="grid"></div><div id="summary" class="summary">Nenhum número selecionado.</div></div>
-<div class="card"><h2>Seus dados</h2><input id="name" class="input" placeholder="Seu nome"><input id="phone" class="input" placeholder="Seu WhatsApp"><button class="btn" onclick="pix()">💳 Continuar para o Pix</button><div id="dataMsg"></div></div>
-<div id="pixCard" class="card pix"><h2>💜 Pagamento via Pix</h2><div id="amount" class="center"></div><p class="small center">Faça o Pix e depois confirme seus números.</p><img id="qr" class="qr"><div id="code" class="code"></div><button class="btn alt" onclick="copyPix()">📋 Copiar Pix Copia e Cola</button><button class="btn" onclick="reserve()">✅ Confirmar meus números</button><div id="reserveMsg"></div></div>
-<div id="proofCard" class="card proof"><h2>🧾 Enviar comprovante do Pix</h2><p class="small">Esta opção aparece somente depois da reserva.</p><input id="file" class="input" type="file" accept="image/*,.pdf"><button class="btn" onclick="proof()">📤 Enviar comprovante</button><div id="proofMsg"></div></div>
+*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:linear-gradient(#dff8ff,#f7edff);color:#4d3b63}.wrap{max-width:760px;width:94%;margin:0 auto 50px}.top{padding:20px 8px;text-align:center}.top h1{margin:0;font-size:30px;color:#8a55d5;text-shadow:1px 2px #fff}.card{background:#fff;border-radius:22px;padding:18px;margin:14px 0;box-shadow:0 7px 22px #7c5aa21f;border:2px solid #fff}.hero{width:100%;max-height:560px;object-fit:cover;border-radius:20px;display:block}.purpose{text-align:center;background:linear-gradient(135deg,#f1d9ff,#ffe1f2)}.purpose h2{color:#7c43b9;margin-top:0}.purpose p{font-size:17px;line-height:1.55;margin:8px 0}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;text-align:center}.stat{background:#faf7ff;border-radius:15px;padding:14px;border:2px solid #eee3ff}.stat b{display:block;font-size:22px;color:#ef6e78;margin-bottom:5px}.grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}.num{border:0;border-radius:11px;padding:12px 2px;background:#d9f4df;color:#256d3b;font-weight:700;cursor:pointer}.num.sel{background:#8b55d5;color:#fff}.num.busy{background:#b7b7b7;color:#fff;cursor:not-allowed}.input{width:100%;padding:13px;margin:7px 0;border:2px solid #eadfff;border-radius:11px;font-size:16px;outline:none}.input:focus{border-color:#a96ae1}.btn{width:100%;border:0;border-radius:13px;padding:14px;margin-top:10px;background:#8b55d5;color:#fff;font-weight:700;font-size:16px;cursor:pointer;box-shadow:0 4px 0 #7141a9}.btn:active{transform:translateY(2px);box-shadow:0 2px 0 #7141a9}.summary{padding:13px;border-radius:12px;background:#f5efff;margin-top:12px}.pix{display:none}.qr{display:block;width:245px;max-width:85%;margin:15px auto}.code{background:#f7f7f7;padding:12px;border-radius:12px;word-break:break-all;font-size:12px;border:1px solid #eee}.msg{padding:12px;border-radius:12px;margin-top:10px;text-align:center}.ok{background:#e6faea;color:#176a2a}.err{background:#ffe8e8;color:#a00000}.small{text-align:center;color:#76677f;font-size:13px;line-height:1.45}.center{text-align:center}.hide{display:none}
+@media(max-width:520px){.top h1{font-size:24px}.grid{grid-template-columns:repeat(5,1fr);gap:6px}.num{padding:10px 1px}.stats{grid-template-columns:1fr 1fr}.stat:last-child{grid-column:1/-1}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header class="top"><h1>🌟 Rifa Radicais Kids | Juvenil 🌟</h1><div>💜 Encontro com Deus 💜</div></header>
+
+<div class="card"><img class="hero" src="/imagem-rifa" alt="Encontro com Deus - Radicais Kids"></div>
+
+<div class="card purpose">
+<h2>💜 Faça parte desse propósito!</h2>
+<p><b>Invista para que crianças e juvenis tenham um Encontro com Deus.</b></p>
+<p>Seja um canal de Deus na vida de uma criança! Cada número é uma semente para a próxima geração. ❤️‍🔥</p>
 </div>
+
+<div class="card">
+<div class="stats">
+<div class="stat"><b id="available">100</b>Disponíveis</div>
+<div class="stat"><b id="reserved">0</b>Reservados</div>
+<div class="stat"><b>R$ 10,00</b>Por número</div>
+</div>
+</div>
+
+<div class="card">
+<h2>🎟️ Escolha seus números</h2>
+<p class="small">🟢 Disponível &nbsp; 💜 Selecionado &nbsp; 🔒 Já reservado</p>
+<div id="grid" class="grid"></div>
+<div id="summary" class="summary">Nenhum número selecionado.</div>
+</div>
+
+<div class="card">
+<h2>👤 Seus dados</h2>
+<input id="name" class="input" placeholder="Seu nome completo">
+<input id="phone" class="input" placeholder="Seu WhatsApp" inputmode="tel">
+<input id="email" class="input" placeholder="Seu e-mail" type="email">
+<button class="btn" onclick="generatePix()">💳 Gerar Pix</button>
+<div id="dataMsg"></div>
+</div>
+
+<div id="pixCard" class="card pix">
+<h2>💜 Pague com Pix</h2>
+<div id="amount" class="center"></div>
+<p class="small">Após realizar o pagamento, sua reserva será confirmada automaticamente no sistema.</p>
+<img id="qr" class="qr" alt="QR Code Pix">
+<div id="code" class="code"></div>
+<button class="btn" onclick="copyPix()">📋 Copiar código</button>
+<button class="btn" onclick="reserve()">✅ Confirmar minha reserva</button>
+<div id="reserveMsg"></div>
+</div>
+</div>
+
 <script>
-let rifa,selected=[],sold=new Set(),pixCode="",reservation=null;
-const $=x=>document.getElementById(x);
+let raffle=null,selected=[],sold=new Set(),pixCode="";
+const $=id=>document.getElementById(id);
 const money=v=>Number(v).toFixed(2).replace(".",",");
-async function load(){rifa=await (await fetch("/api/rifa")).json();sold=new Set(rifa.sold);draw()}
-function draw(){const g=$("grid");g.innerHTML="";for(let i=1;i<=rifa.quantity;i++){let b=document.createElement("button");b.className="num";b.textContent=String(i).padStart(2,"0");if(sold.has(i)){b.classList.add("busy");b.disabled=true}else b.onclick=()=>toggle(i,b);g.appendChild(b)}}
-function toggle(n,b){if(selected.includes(n)){selected=selected.filter(x=>x!==n);b.classList.remove("sel")}else{selected.push(n);selected.sort((a,b)=>a-b);b.classList.add("sel")}$("summary").innerHTML=selected.length?"<b>Números:</b> "+selected.map(n=>String(n).padStart(2,"0")).join(", ")+"<br><b>Total:</b> R$ "+money(selected.length*rifa.price):"Nenhum número selecionado."}
-async function pix(){const m=$("dataMsg");if(!selected.length){m.className="msg err";m.textContent="Selecione um número.";return}if(!$("name").value.trim()||!$("phone").value.trim()){m.className="msg err";m.textContent="Informe nome e WhatsApp.";return}try{const r=await fetch("/api/pix?numbers="+selected.join(",")),d=await r.json();if(!r.ok)throw Error(d.error);pixCode=d.pix;$("amount").textContent="R$ "+money(d.amount);$("qr").src=d.qr;$("code").textContent=d.pix;$("pixCard").style.display="block";$("pixCard").scrollIntoView({behavior:"smooth"})}catch(e){m.className="msg err";m.textContent=e.message}}
-async function copyPix(){try{await navigator.clipboard.writeText(pixCode);alert("Pix Copia e Cola copiado!")}catch(e){alert("Não foi possível copiar.")}}
-async function reserve(){const m=$("reserveMsg");const r=await fetch("/api/reservar",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({name:$("name").value.trim(),phone:$("phone").value.trim(),numbers:selected})});const d=await r.json();if(!r.ok){m.className="msg err";m.textContent=d.error;return}reservation=d.reserva;m.className="msg ok";m.innerHTML="<b>Reserva realizada! 🎉</b><br>Código: <b>"+reservation.id+"</b><br>O registro foi enviado para a organização."; $("proofCard").style.display="block";$("proofCard").scrollIntoView({behavior:"smooth"});selected.forEach(n=>sold.add(n))}
-async function proof(){const f=$("file").files[0],m=$("proofMsg");if(!f){m.className="msg err";m.textContent="Selecione o comprovante.";return}const fd=new FormData();fd.append("comprovante",f);fd.append("id",reservation.id);const r=await fetch("/api/comprovante",{method:"POST",body:fd});const d=await r.json();m.className=r.ok?"msg ok":"msg err";m.textContent=r.ok?"Comprovante enviado com sucesso!":d.error}
+async function load(){raffle=await (await fetch("/api/rifa")).json();sold=new Set(raffle.sold);draw();}
+function draw(){
+  const g=$("grid");g.innerHTML="";
+  for(let i=1;i<=raffle.quantity;i++){
+    const b=document.createElement("button");b.className="num";b.textContent=String(i).padStart(2,"0");
+    if(sold.has(i)){b.classList.add("busy");b.disabled=true;b.title="Número já reservado";}
+    else b.onclick=()=>toggle(i,b);
+    g.appendChild(b);
+  }
+  $("reserved").textContent=sold.size;
+  $("available").textContent=raffle.quantity-sold.size;
+}
+function toggle(n,b){
+  if(selected.includes(n)){selected=selected.filter(x=>x!==n);b.classList.remove("sel")}
+  else{selected.push(n);selected.sort((a,b)=>a-b);b.classList.add("sel")}
+  $("summary").innerHTML=selected.length
+    ? "<b>Números:</b> "+selected.map(n=>String(n).padStart(2,"0")).join(", ")+"<br><b>Total:</b> R$ "+money(selected.length*raffle.price)
+    : "Nenhum número selecionado.";
+}
+async function generatePix(){
+  const m=$("dataMsg");
+  if(!selected.length){m.className="msg err";m.textContent="Selecione pelo menos um número.";return}
+  if(!$("name").value.trim()||!$("phone").value.trim()||!$("email").value.trim()){m.className="msg err";m.textContent="Preencha nome, WhatsApp e e-mail.";return}
+  try{
+    const r=await fetch("/api/pix?numbers="+selected.join(",")),d=await r.json();
+    if(!r.ok)throw Error(d.error);
+    pixCode=d.pix;$("amount").innerHTML="<b>Valor total: R$ "+money(d.amount)+"</b>";
+    $("qr").src=d.qr;$("code").textContent=d.pix;$("pixCard").style.display="block";
+    $("pixCard").scrollIntoView({behavior:"smooth"});
+  }catch(e){m.className="msg err";m.textContent=e.message}
+}
+async function copyPix(){
+  try{await navigator.clipboard.writeText(pixCode);alert("Pix Copia e Cola copiado!")}catch(e){alert("Não foi possível copiar automaticamente.")}
+}
+async function reserve(){
+  const m=$("reserveMsg");
+  try{
+    const r=await fetch("/api/reservar",{method:"POST",headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({name:$("name").value.trim(),phone:$("phone").value.trim(),email:$("email").value.trim(),numbers:selected})});
+    const d=await r.json();if(!r.ok)throw Error(d.error);
+    m.className="msg ok";
+    m.innerHTML="<b>🎉 Reserva confirmada!</b><br>Seu código: <b>"+d.reserva.id+"</b><br>Números: <b>"+d.reserva.numbers.join(", ")+"</b><br>Valor: <b>R$ "+money(d.reserva.amount)+"</b><br><br>Obrigado por fazer parte desse propósito! ❤️‍🔥";
+    selected.forEach(n=>sold.add(n));selected=[];draw();
+  }catch(e){m.className="msg err";m.textContent=e.message}
+}
 load();
-</script></body></html>
+</script>
+</body>
+</html>
