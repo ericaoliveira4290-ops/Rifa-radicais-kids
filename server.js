@@ -15,6 +15,7 @@ const dadosIniciais = {
   drawMethod: "Sorteador",
   responsible: "Fernanda Souza",
   pix: "62 996251975",
+  pixNome: "Fernanda Maria Alves de Souza",
   reservations: {}
 };
 
