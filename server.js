@@ -66,19 +66,27 @@ function admin(req, res, next) {
 }
 async function getSold() {
   if (!supabase) throw new Error('Banco de dados ainda não configurado no Render.');
-  // Leitura centralizada via função SECURITY DEFINER: não depende de SELECT/RLS
-  // nas tabelas para o visitante e usa exatamente o mesmo banco da reserva.
-  const { data, error } = await supabase.rpc('get_rifa_numeros');
+  // Usa a mesma conexão server-side que grava as reservas. Não depende de
+  // funções extras no Supabase nem de RLS para a leitura pública.
+  const { data, error } = await supabase
+    .from('rifa_numeros')
+    .select('number')
+    .order('number', { ascending: true });
   if (error) throw error;
-  return Array.isArray(data) ? data.map(Number) : [];
+  return (data || []).map(r => Number(r.number));
 }
 
 async function getDbSnapshot() {
   if (!supabase) throw new Error('Banco de dados ainda não configurado no Render.');
-  const { data, error } = await supabase.rpc('get_rifa_snapshot');
-  if (error) throw error;
-  return { numbers: data?.numbers || [], reservations: data?.reservations || [] };
+  const [nr, rr] = await Promise.all([
+    supabase.from('rifa_numeros').select('number,reservation_id').order('number', { ascending: true }),
+    supabase.from('rifa_reservas').select('id,name,phone,email,amount,status,created_at').order('created_at', { ascending: false })
+  ]);
+  if (nr.error) throw nr.error;
+  if (rr.error) throw rr.error;
+  return { numbers: nr.data || [], reservations: rr.data || [] };
 }
+
 async function sendReservationEmail(r) {
   if (!EMAIL_USER || !EMAIL_PASS || !EMAIL_TO) return;
   const transporter = nodemailer.createTransport({ service: 'gmail', auth: { user: EMAIL_USER, pass: EMAIL_PASS }, connectionTimeout: 10000, greetingTimeout: 10000, socketTimeout: 10000 });
@@ -104,6 +112,19 @@ app.get('/api/rifa', async (req, res) => {
     res.set('Expires','0');
     res.json({ ...CONFIG, sold, serverTime: new Date().toISOString() });
   } catch (e) { console.error('GET /api/rifa:', e); res.status(500).json({ error: e.message }); }
+});
+
+app.get('/api/health', async (req, res) => {
+  try {
+    if (!supabase) return res.status(503).json({ ok:false, error:'SUPABASE_URL/SUPABASE_SECRET_KEY ausentes no Render.' });
+    const { data, error } = await supabase.from('rifa_numeros').select('number').order('number');
+    if (error) throw error;
+    res.set('Cache-Control','no-store');
+    res.json({ ok:true, sold:(data||[]).map(r=>Number(r.number)), count:(data||[]).length });
+  } catch (e) {
+    console.error('GET /api/health:', e);
+    res.status(500).json({ ok:false, error:e.message, code:e.code || null });
+  }
 });
 
 app.get('/api/status', async (req, res) => {
