@@ -66,18 +66,32 @@ function admin(req, res, next) {
 }
 async function getSold() {
   if (!supabase) throw new Error('Banco de dados ainda não configurado no Render.');
-  // Usa a mesma conexão server-side que grava as reservas. Não depende de
-  // funções extras no Supabase nem de RLS para a leitura pública.
+
+  // Fonte oficial do bloqueio: função do Supabase com SECURITY DEFINER.
+  // Mantemos fallback para SELECT direto caso a função ainda não exista.
+  try {
+    const { data, error } = await supabase.rpc('get_rifa_numeros');
+    if (!error && Array.isArray(data)) return data.map(Number).filter(Number.isFinite);
+  } catch (_) {}
+
   const { data, error } = await supabase
     .from('rifa_numeros')
     .select('number')
     .order('number', { ascending: true });
   if (error) throw error;
-  return (data || []).map(r => Number(r.number));
+  return (data || []).map(r => Number(r.number)).filter(Number.isFinite);
 }
 
 async function getDbSnapshot() {
   if (!supabase) throw new Error('Banco de dados ainda não configurado no Render.');
+  try {
+    const { data, error } = await supabase.rpc('get_rifa_snapshot');
+    if (!error && data) return {
+      numbers: Array.isArray(data.numbers) ? data.numbers : [],
+      reservations: Array.isArray(data.reservations) ? data.reservations : []
+    };
+  } catch (_) {}
+
   const [nr, rr] = await Promise.all([
     supabase.from('rifa_numeros').select('number,reservation_id').order('number', { ascending: true }),
     supabase.from('rifa_reservas').select('id,name,phone,email,amount,status,created_at').order('created_at', { ascending: false })
@@ -110,7 +124,7 @@ app.get('/api/rifa', async (req, res) => {
     res.set('Cache-Control','no-store, no-cache, must-revalidate, proxy-revalidate');
     res.set('Pragma','no-cache');
     res.set('Expires','0');
-    res.json({ ...CONFIG, sold, serverTime: new Date().toISOString() });
+    res.json({ ...CONFIG, sold, serverTime: new Date().toISOString(), source: 'supabase' });
   } catch (e) { console.error('GET /api/rifa:', e); res.status(500).json({ error: e.message }); }
 });
 
