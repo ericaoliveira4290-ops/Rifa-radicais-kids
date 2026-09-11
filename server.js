@@ -9,7 +9,7 @@ const app = express();
 const PORT = process.env.PORT || 10000;
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || '';
 const SUPABASE_URL = process.env.SUPABASE_URL || '';
-const SUPABASE_SECRET_KEY = process.env.SUPABASE_SECRET_KEY || '';
+const SUPABASE_SECRET_KEY = process.env.SUPABASE_SECRET_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_KEY || '';
 const EMAIL_USER = process.env.EMAIL_USER || '';
 const EMAIL_PASS = process.env.EMAIL_PASS || '';
 const EMAIL_TO = process.env.EMAIL_TO || 'Oliveira.ericamenezes@gmail.com';
@@ -27,7 +27,7 @@ const CONFIG = {
 };
 
 if (!SUPABASE_URL || !SUPABASE_SECRET_KEY) {
-  console.warn('SUPABASE_URL/SUPABASE_SECRET_KEY ainda não configurados.');
+  console.warn('Supabase não configurado: defina SUPABASE_URL e SUPABASE_SECRET_KEY (ou SUPABASE_SERVICE_ROLE_KEY).');
 }
 const supabase = (SUPABASE_URL && SUPABASE_SECRET_KEY)
   ? createClient(SUPABASE_URL, SUPABASE_SECRET_KEY, { auth: { persistSession: false } })
@@ -65,9 +65,18 @@ function admin(req, res, next) {
 }
 async function getSold() {
   if (!supabase) throw new Error('Banco de dados ainda não configurado no Render.');
-  const { data, error } = await supabase.from('rifa_numeros').select('number').order('number');
+  const { data, error } = await supabase.from('rifa_numeros').select('number,reservation_id').order('number');
   if (error) throw error;
   return (data || []).map(r => Number(r.number));
+}
+
+async function getDbSnapshot() {
+  if (!supabase) throw new Error('Banco de dados ainda não configurado no Render.');
+  const { data: nums, error: nerr } = await supabase.from('rifa_numeros').select('number,reservation_id').order('number');
+  if (nerr) throw nerr;
+  const { data: reservations, error: rerr } = await supabase.from('rifa_reservas').select('id,name,phone,email,amount,status,created_at').order('created_at', { ascending:false });
+  if (rerr) throw rerr;
+  return { numbers: nums || [], reservations: reservations || [] };
 }
 async function sendReservationEmail(r) {
   if (!EMAIL_USER || !EMAIL_PASS || !EMAIL_TO) return;
@@ -89,8 +98,19 @@ app.get('/imagem-rifa', (req, res) => {
 app.get('/api/rifa', async (req, res) => {
   try {
     const sold = await getSold();
-    res.json({ ...CONFIG, sold });
-  } catch (e) { res.status(500).json({ error: e.message }); }
+    res.set('Cache-Control','no-store, no-cache, must-revalidate, proxy-revalidate');
+    res.set('Pragma','no-cache');
+    res.set('Expires','0');
+    res.json({ ...CONFIG, sold, serverTime: new Date().toISOString() });
+  } catch (e) { console.error('GET /api/rifa:', e); res.status(500).json({ error: e.message }); }
+});
+
+app.get('/api/status', async (req, res) => {
+  try {
+    const db = await getDbSnapshot();
+    res.set('Cache-Control','no-store');
+    res.json({ ok:true, serverTime:new Date().toISOString(), supabaseUrl:SUPABASE_URL, numbers:db.numbers, reservations:db.reservations });
+  } catch(e) { console.error('GET /api/status:', e); res.status(500).json({ ok:false, error:e.message }); }
 });
 
 app.post('/api/reservar', async (req, res) => {
@@ -121,11 +141,10 @@ app.post('/api/reservar', async (req, res) => {
 app.get('/admin', admin, async (req, res) => {
   try {
     if (!supabase) return res.status(503).send('Banco de dados ainda não configurado.');
-    const { data: reservations, error } = await supabase.from('rifa_reservas').select('*').order('created_at', { ascending: false });
-    if (error) throw error;
-    const { data: nums, error: nerr } = await supabase.from('rifa_numeros').select('number,reservation_id').order('number');
-    if (nerr) throw nerr;
-    const grouped = (reservations || []).map(r => ({...r, numbers:(nums||[]).filter(n=>n.reservation_id===r.id).map(n=>n.number).sort((a,b)=>a-b)}));
+    const db = await getDbSnapshot();
+    const reservations = db.reservations;
+    const nums = db.numbers;
+    const grouped = reservations.map(r => ({...r, numbers:nums.filter(n=>n.reservation_id===r.id).map(n=>n.number).sort((a,b)=>a-b)}));
     const sold = nums?.length || 0, pct = Math.round(sold/CONFIG.quantity*100), total = grouped.reduce((s,r)=>s+Number(r.amount||0),0);
     res.type('html').send(`<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"><title>Área do Organizador</title><style>*{box-sizing:border-box;font-family:Montserrat,Arial,sans-serif}body{margin:0;background:#f4f0ff;color:#3b2a4b}.wrap{max-width:1100px;margin:auto;padding:25px}.head,.card{background:#fff;border-radius:22px;padding:22px;margin-bottom:18px;box-shadow:0 10px 30px #4b237f14}.head h1{margin:0;color:#7440c7}.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.stat{padding:18px;border-radius:16px;background:#f8f5ff}.stat b{display:block;font-size:25px;color:#7440c7}.table{width:100%;border-collapse:collapse}.table th,.table td{padding:11px;border-bottom:1px solid #eee;text-align:left;font-size:13px}.btn{border:0;border-radius:12px;padding:12px 16px;background:#7440c7;color:#fff;font-weight:800;cursor:pointer}@media(max-width:750px){.stats{grid-template-columns:1fr 1fr}.table{display:block;overflow:auto;white-space:nowrap}}</style></head><body><div class="wrap"><div class="head"><h1>Área do Organizador</h1><p>Rifa Radicais Kids | Juvenil — Encontro com Deus</p><button class="btn" onclick="downloadCSV()">Baixar lista CSV</button></div><div class="card"><div class="stats"><div class="stat"><b>${sold}</b>Números reservados</div><div class="stat"><b>${CONFIG.quantity-sold}</b>Disponíveis</div><div class="stat"><b>${pct}%</b>Percentual vendido</div><div class="stat"><b>R$ ${total.toFixed(2).replace('.',',')}</b>Total reservado</div></div></div><div class="card"><table class="table"><thead><tr><th>Data/hora</th><th>Nome</th><th>WhatsApp</th><th>E-mail</th><th>Números</th><th>Valor</th><th>Status</th></tr></thead><tbody>${grouped.map(r=>`<tr><td>${new Date(r.created_at).toLocaleString('pt-BR')}</td><td>${esc(r.name)}</td><td>${esc(r.phone)}</td><td>${esc(r.email)}</td><td>${r.numbers.map(n=>String(n).padStart(2,'0')).join(', ')}</td><td>R$ ${Number(r.amount).toFixed(2).replace('.',',')}</td><td>${esc(r.status)}</td></tr>`).join('')}</tbody></table></div></div><script>const rows=${JSON.stringify(grouped).replace(/</g,'\\u003c')};function esc(s){return String(s).replace(/[&<>\"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]))}function downloadCSV(){const h=['Data/hora','Nome','WhatsApp','E-mail','Números','Valor','Status'];const lines=[h,...rows.map(r=>[new Date(r.created_at).toLocaleString('pt-BR'),r.name,r.phone,r.email,r.numbers.join(' '),Number(r.amount).toFixed(2),r.status])].map(a=>a.map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(';'));const b=new Blob(['\\ufeff'+lines.join('\\n')],{type:'text/csv;charset=utf-8'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='rifa-radicais-kids.csv';a.click()}</script></body></html>`);
   } catch(e) { res.status(500).send('Não foi possível carregar a área do organizador.'); }
