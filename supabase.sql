@@ -66,3 +66,41 @@ grant execute on function public.reservar_numeros(integer[],text,text,text,numer
 
 alter table public.rifa_reservas enable row level security;
 alter table public.rifa_numeros enable row level security;
+
+
+-- LEITURA ROBUSTA DO STATUS DA RIFA
+-- Essas funções são SECURITY DEFINER e retornam somente os dados necessários.
+-- Assim o site não depende de SELECT/RLS direto nas tabelas para mostrar os números.
+drop function if exists public.get_rifa_numeros();
+create function public.get_rifa_numeros()
+returns integer[]
+language sql
+security definer
+set search_path = public
+as $$
+  select coalesce(array_agg(number order by number), '{}'::integer[])
+  from public.rifa_numeros;
+$$;
+
+revoke all on function public.get_rifa_numeros() from public;
+revoke all on function public.get_rifa_numeros() from anon;
+revoke all on function public.get_rifa_numeros() from authenticated;
+grant execute on function public.get_rifa_numeros() to service_role;
+
+drop function if exists public.get_rifa_snapshot();
+create function public.get_rifa_snapshot()
+returns jsonb
+language sql
+security definer
+set search_path = public
+as $$
+  select jsonb_build_object(
+    'numbers', coalesce((select jsonb_agg(jsonb_build_object('number', n.number, 'reservation_id', n.reservation_id) order by n.number) from public.rifa_numeros n), '[]'::jsonb),
+    'reservations', coalesce((select jsonb_agg(jsonb_build_object('id', r.id, 'name', r.name, 'phone', r.phone, 'email', r.email, 'amount', r.amount, 'status', r.status, 'created_at', r.created_at) order by r.created_at desc) from public.rifa_reservas r), '[]'::jsonb)
+  );
+$$;
+
+revoke all on function public.get_rifa_snapshot() from public;
+revoke all on function public.get_rifa_snapshot() from anon;
+revoke all on function public.get_rifa_snapshot() from authenticated;
+grant execute on function public.get_rifa_snapshot() to service_role;

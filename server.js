@@ -66,18 +66,18 @@ function admin(req, res, next) {
 }
 async function getSold() {
   if (!supabase) throw new Error('Banco de dados ainda não configurado no Render.');
-  const { data, error } = await supabase.from('rifa_numeros').select('number,reservation_id').order('number');
+  // Leitura centralizada via função SECURITY DEFINER: não depende de SELECT/RLS
+  // nas tabelas para o visitante e usa exatamente o mesmo banco da reserva.
+  const { data, error } = await supabase.rpc('get_rifa_numeros');
   if (error) throw error;
-  return (data || []).map(r => Number(r.number));
+  return Array.isArray(data) ? data.map(Number) : [];
 }
 
 async function getDbSnapshot() {
   if (!supabase) throw new Error('Banco de dados ainda não configurado no Render.');
-  const { data: nums, error: nerr } = await supabase.from('rifa_numeros').select('number,reservation_id').order('number');
-  if (nerr) throw nerr;
-  const { data: reservations, error: rerr } = await supabase.from('rifa_reservas').select('id,name,phone,email,amount,status,created_at').order('created_at', { ascending:false });
-  if (rerr) throw rerr;
-  return { numbers: nums || [], reservations: reservations || [] };
+  const { data, error } = await supabase.rpc('get_rifa_snapshot');
+  if (error) throw error;
+  return { numbers: data?.numbers || [], reservations: data?.reservations || [] };
 }
 async function sendReservationEmail(r) {
   if (!EMAIL_USER || !EMAIL_PASS || !EMAIL_TO) return;
