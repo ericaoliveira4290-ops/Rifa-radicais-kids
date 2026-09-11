@@ -20,7 +20,8 @@ const CONFIG = {
   quantity: 100,
   price: 10,
   responsible: 'Fernanda Maria Alves de Souza',
-  pix: '62996251975',
+  pix: '+5562996251975',
+  pixDisplay: '62996251975',
   pixName: 'Fernanda Maria Alves de Souza',
   pixCity: 'GOIANIA',
   drawTarget: 70
