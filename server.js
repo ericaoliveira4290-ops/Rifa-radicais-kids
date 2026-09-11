@@ -66,24 +66,36 @@ function admin(req, res, next) {
 }
 async function getSold() {
   if (!supabase) throw new Error('Banco de dados ainda não configurado no Render.');
-  const { data, error } = await supabase.rpc('get_rifa_numeros');
+  // Leitura direta usando a mesma chave de servidor que já registra as reservas.
+  // Não depende de nenhuma função RPC adicional no Supabase.
+  const { data, error } = await supabase
+    .from('rifa_numeros')
+    .select('number')
+    .order('number', { ascending: true });
   if (error) {
-    console.error('get_rifa_numeros:', error);
-    throw new Error('A leitura dos números reservados não está configurada no Supabase.');
+    console.error('GET rifa_numeros:', error);
+    throw error;
   }
-  return Array.isArray(data) ? data.map(Number).filter(Number.isFinite) : [];
+  return (data || []).map(r => Number(r.number)).filter(Number.isFinite);
 }
 
 async function getDbSnapshot() {
   if (!supabase) throw new Error('Banco de dados ainda não configurado no Render.');
-  const { data, error } = await supabase.rpc('get_rifa_snapshot');
-  if (error) {
-    console.error('get_rifa_snapshot:', error);
-    throw new Error('A leitura das reservas não está configurada no Supabase.');
+  const [numbersResult, reservationsResult] = await Promise.all([
+    supabase.from('rifa_numeros').select('number,reservation_id').order('number', { ascending: true }),
+    supabase.from('rifa_reservas').select('id,name,phone,email,amount,status,created_at').order('created_at', { ascending: false })
+  ]);
+  if (numbersResult.error) {
+    console.error('GET rifa_numeros:', numbersResult.error);
+    throw numbersResult.error;
+  }
+  if (reservationsResult.error) {
+    console.error('GET rifa_reservas:', reservationsResult.error);
+    throw reservationsResult.error;
   }
   return {
-    numbers: Array.isArray(data?.numbers) ? data.numbers : [],
-    reservations: Array.isArray(data?.reservations) ? data.reservations : []
+    numbers: numbersResult.data || [],
+    reservations: reservationsResult.data || []
   };
 }
 
